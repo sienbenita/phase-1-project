@@ -1,9 +1,11 @@
+const selectionTypes = ["blush", "bronzer", "eyebrow", "eyeliner", "eyeshadow", "foundation", "lip_liner", "lipstick", "mascara", "nail_polish"]
+
 const divProductContainer = document.querySelector("#product-container");
-const btnFoundation = document.querySelectorAll(".category-selector");
-btnFoundation[0].addEventListener("click", async function() {
-    const products = await fetchProductsByType(btnFoundation[0].textContent)
+const categorySelectors = document.querySelectorAll(".category-selector");
+categorySelectors.forEach(cs => {cs.addEventListener("click", async function() {
+    const products = await fetchProductsByType(cs.value)
     populateProductContainer(products);
-});
+})});
 
 function toTitleCase(string) {
     const split = string.split(" ");
@@ -43,7 +45,7 @@ function createProductCard(image, brand, name, price) {
     card.classList.add("product-card");
     card.innerHTML = `
         <img class="product-image" src="${image}">
-        <span class="product-brand">${brand}</span>
+        <span class="product-brand">${brand.toUpperCase()}</span>
         <span class="product-name">${name}</span>
         <span class="product-price">$${price}</span>
         <button class="add-to-cart-button">ADD TO CART</button>
