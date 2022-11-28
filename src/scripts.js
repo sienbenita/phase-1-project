@@ -12,7 +12,7 @@ const placeholderProductValues = {
 //     card: element, 
 //     product: object
 // }
-const loadedProducts = [];
+let loadedProducts = [];
 
 // query selectors
 const divProductContainer = document.querySelector("#product-container");
@@ -42,6 +42,40 @@ function toTitleCase(string) {
         // previous word + space + first letter of current word capitalised + rest of current word
         return (p + " " + c[0].toUpperCase() + c.substring(1)).trim();
     }, "")
+}
+
+function removeAllChildElements(parent) {
+    // parent: the element from which to remove all children
+    // remove all of the children of parent
+    // return: none
+
+    let child = parent.lastElementChild;
+    while (child) {
+        parent.removeChild(child);
+        child = parent.lastElementChild;
+    }
+}
+
+function addToLoadedProducts(card, product) {
+    // card: element, product: object
+    // create an object containing the card and product and push it to the loadedObjects array
+    // return: none
+
+    const productObject = {
+        "card": card,
+        "product": product
+    }
+    loadedProducts.push(productObject);
+}
+
+function addProductImageErrorListenerToLast(placeholder) {
+    // placeholder: string image url
+    // add an event listener to the last product image
+    // if there is an error retrieving the image, use the placeholder image instead
+    // return: none
+    const productImages = document.querySelectorAll(".product-image");
+    const productImagesLast = productImages[productImages.length - 1];
+    productImagesLast.addEventListener("error", () => productImagesLast.src = placeholder);
 }
 
 async function fetchProductsByTypeOrCategory (searchTerm) {
@@ -125,27 +159,7 @@ function populateProductContainer(products) {
     })
 }
 
-function addToLoadedProducts(card, product) {
-    // card: element, product: object
-    // create an object containing the card and product and push it to the loadedObjects array
-    // return: none
-    
-    const productObject = {
-        "card": card,
-        "product": product
-    }
-    loadedProducts.push(productObject);
-}
 
-function addProductImageErrorListenerToLast(placeholder) {
-    // placeholder: string image url
-    // add an event listener to the last product image
-    // if there is an error retrieving the image, use the placeholder image instead
-    // return: none
-    const productImages = document.querySelectorAll(".product-image");
-    const productImagesLast = productImages[productImages.length - 1];
-    productImagesLast.addEventListener("error", () => productImagesLast.src = placeholder);
-}
 
 function createCheckBoxAndLabel(value, labelText) {
     // labelText: string, value: string
@@ -190,16 +204,10 @@ function populateFilterContainer(filterContainer, array, title) {
     })
 }
 
-function removeAllChildElements(parent) {
-    // parent: the element from which to remove all children
-    // remove all of the children of parent
-    // return: none
-
-    let child = parent.lastElementChild;
-    while (child) {
-        parent.removeChild(child);
-        child = parent.lastElementChild;
-    }
+function filterProducts(key, value) {
+    
 }
+
+
 
 populateProductContainer([placeholderProductValues, placeholderProductValues])
