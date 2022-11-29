@@ -6,11 +6,36 @@ const placeholderProductValues = {
     name: "Freshest",
     price: "0.00"
 }
+const testValues = [
+    {
+        brand: "Uncle Joe's",
+        image_link: "./images/cosmetics.png",
+        name: "Freshest",
+        price: "0.00",
+        tag_list: ["vegan", "amazing"]
+    }, 
+    {
+        brand: "Uncle Daniel's",
+        image_link: "./images/cosmetics.png",
+        name: "Dankest",
+        price: "50.00",
+        tag_list: ["full gmo", "beautiful"]
+    }
+]
+
+const strings = {
+    "productCardDisplay": "flex",
+    "none": "none",
+    "brand": "brand",
+    "tagList": "tag_list"
+}
 
 // array of objects: 
 // {
 //     card: element, 
-//     product: object
+//     product: object,
+//     brandCriteriaMet: boolean,
+//     criteriaMet: number
 // }
 let loadedProducts = [];
 
@@ -20,7 +45,9 @@ const btnsCategorySelector = document.querySelectorAll(".category-selector");
 const divBrandFilter = document.querySelector("#brand-filter");
 const divTagFilter = document.querySelector("#tag-filter");
 
-// add event listener to each category selector button
+// event listeners
+
+// navbar category selectors
 btnsCategorySelector.forEach(cs => {cs.addEventListener("click", async function() {
     // get array of product objects
     const products = await fetchProductsByTypeOrCategory(cs.value)
@@ -28,8 +55,8 @@ btnsCategorySelector.forEach(cs => {cs.addEventListener("click", async function(
     populateProductContainer(products);
 
     const filterLists = getFilterLists(products);
-    populateFilterContainer(divBrandFilter, filterLists.brands, "brands");
-    populateFilterContainer(divTagFilter, filterLists.tags, "tags");
+    populateFilterContainer(divBrandFilter, filterLists.brands, "brands", strings.brand);
+    populateFilterContainer(divTagFilter, filterLists.tags, "tags", strings.tagList);
 })});
 
 function toTitleCase(string) {
@@ -42,6 +69,12 @@ function toTitleCase(string) {
         // previous word + space + first letter of current word capitalised + rest of current word
         return (p + " " + c[0].toUpperCase() + c.substring(1)).trim();
     }, "")
+}
+
+function arrayToLowerCase(array) {
+    return array.map(e => {
+        return e.toLowerCase();
+    })
 }
 
 function removeAllChildElements(parent) {
@@ -63,7 +96,9 @@ function addToLoadedProducts(card, product) {
 
     const productObject = {
         "card": card,
-        "product": product
+        "product": product,
+        "brandCriteriaMet": false,
+        "criteriaMet": 0
     }
     loadedProducts.push(productObject);
 }
@@ -161,7 +196,7 @@ function populateProductContainer(products) {
 
 
 
-function createCheckBoxAndLabel(value, labelText) {
+function createCheckBoxAndLabel(value, labelText, category) {
     // labelText: string, value: string
     // return: a div element containing a checkbox with value=value, and a label for the checkbox with innerText=value
     
@@ -172,6 +207,23 @@ function createCheckBoxAndLabel(value, labelText) {
     checkbox.type = "checkbox";
     checkbox.value = value;
     checkbox.name = value;
+    if (category === strings.brand){
+        checkbox.classList.add("brand-checkbox");
+    } else {
+        checkbox.classList.add("other-filter-checkbox");
+    }
+
+    // add checkbox event listener
+    checkbox.addEventListener('change', function() {
+        checkedBoxesCount = countCheckedBoxes();
+        if (checkedBoxesCount.brandFilters + checkedBoxesCount.otherFilters === 1) {
+            changeDisplayOfAllProductCards("none");
+        }
+        filterProducts(category, value, this.checked);
+        if (checkedBoxesCount.brandFilters + checkedBoxesCount.otherFilters === 0) {
+            changeDisplayOfAllProductCards(strings.productCardDisplay);
+        }
+    })
 
     // create label
     const label = document.createElement("label");
@@ -187,7 +239,7 @@ function createCheckBoxAndLabel(value, labelText) {
 
 }
 
-function populateFilterContainer(filterContainer, array, title) {
+function populateFilterContainer(filterContainer, array, title, key) {
     // filterContainer: element to which to append children, array: array of filter values
     // populate the filter container with filter checkboxes and labels
     // return: none
@@ -200,14 +252,71 @@ function populateFilterContainer(filterContainer, array, title) {
 
     // create and append filter checkboxes and labels
     array.forEach(e => {
-        filterContainer.appendChild(createCheckBoxAndLabel(e, e)) // the value and label text are the same
+        filterContainer.appendChild(createCheckBoxAndLabel(e, e, key)) // the value and label text are the same
     })
 }
 
-function filterProducts(key, value) {
-    
+function filterProducts(key, value, checked) {
+
+    // determine if products match the search value
+    switch (key){
+        case strings.brand:
+            loadedProducts.forEach(e => {
+                if (e.product[key].toLowerCase() === value.toLowerCase()) {
+                    changeCriteriaMet(e, checked, true);
+                }
+            })
+            break;
+        case strings.tagList:
+            loadedProducts.forEach(e => {
+                if (arrayToLowerCase(e.product[key]).includes(value.toLowerCase())) {
+                    changeCriteriaMet(e, checked);
+                }
+            })
+            break;
+    }
+
+
+    const checkedBoxesCount = countCheckedBoxes();
+    loadedProducts.forEach(e => {
+        if (e.criteriaMet === checkedBoxesCount.otherFilters && ((checkedBoxesCount.brandFilters > 0 && e.brandCriteriaMet) || checkedBoxesCount.brandFilters === 0)) {
+            e.card.style.display = strings.productCardDisplay;
+        } else {
+            e.card.style.display = strings.none;
+        }
+        
+    })
 }
 
+function changeCriteriaMet (product, checked, brand = false) {
+    if (brand) {
+        product.brandCriteriaMet = checked;
+    } else {
+        if (checked) { 
+            product.criteriaMet++;
+        } else {
+            product.criteriaMet--;
+        }
+    } 
+}
 
+function changeDisplayOfAllProductCards(display) {
+    loadedProducts.forEach(e => {e.card.style.display = display});
+}
 
-populateProductContainer([placeholderProductValues, placeholderProductValues])
+function countCheckedBoxes() {
+    return {
+        "brandFilters": document.querySelectorAll(".brand-checkbox:checked").length,
+        "otherFilters": document.querySelectorAll(".other-filter-checkbox:checked").length
+    };
+
+}
+
+function test(){
+    const filterLists = getFilterLists(testValues);
+    populateFilterContainer(divBrandFilter, filterLists.brands, "brands", strings.brand);
+    populateFilterContainer(divTagFilter, filterLists.tags, "tags", strings.tagList);
+    populateProductContainer(testValues);
+}
+
+test();

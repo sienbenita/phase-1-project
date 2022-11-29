@@ -232,6 +232,7 @@ h2 {
         padding: 10px;
         margin: 5px;
         width: calc(30% - 20px);
+        max-height: 400px;
     }
 
     .product-card:hover {
