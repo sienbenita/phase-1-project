@@ -1,5 +1,6 @@
-// variables
+// *** VARIABLES ***
 const allProductTypes = ["blush", "bronzer", "eyebrow", "eyeliner", "eyeshadow", "foundation", "lip_liner", "lipstick", "mascara", "nail_polish"]
+const prices = ["0", "10", "20"];
 const placeholderProductValues = {
     brand: "Uncle Joe's",
     image_link: "./images/cosmetics.png",
@@ -20,6 +21,13 @@ const testValues = [
         name: "Dankest",
         price: "50.00",
         tag_list: ["full gmo", "beautiful"]
+    },
+    {
+        brand: "Uncle Daniel's",
+        image_link: "./images/cosmetics.png",
+        name: "Moistest",
+        price: "10.00",
+        tag_list: ["full gmo", "amazing"]
     }
 ]
 
@@ -27,7 +35,15 @@ const strings = {
     "productCardDisplay": "flex",
     "none": "none",
     "brand": "brand",
-    "tagList": "tag_list"
+    "tagList": "tag_list",
+    "productColours": "product_colors",
+    "price": "price"
+}
+
+const classNames = {
+    brandCheckbox: "brand-checkbox",
+    tagCheckbox: "tag-checkbox",
+    priceCheckbox: "price-checkbox",
 }
 
 // array of objects: 
@@ -39,13 +55,14 @@ const strings = {
 // }
 let loadedProducts = [];
 
-// query selectors
+// ***QUERY SELECTORS***
 const divProductContainer = document.querySelector("#product-container");
 const btnsCategorySelector = document.querySelectorAll(".category-selector");
 const divBrandFilter = document.querySelector("#brand-filter");
 const divTagFilter = document.querySelector("#tag-filter");
+const divPriceFilter = document.querySelector("#price-filter");
 
-// event listeners
+// *** EVENT LISTENERS ***
 
 // navbar category selectors
 btnsCategorySelector.forEach(cs => {cs.addEventListener("click", async function() {
@@ -57,6 +74,7 @@ btnsCategorySelector.forEach(cs => {cs.addEventListener("click", async function(
     const filterLists = getFilterLists(products);
     populateFilterContainer(divBrandFilter, filterLists.brands, "brands", strings.brand);
     populateFilterContainer(divTagFilter, filterLists.tags, "tags", strings.tagList);
+    populateFilterContainer(divPriceFilter, prices, "price", strings.price);
 })});
 
 function toTitleCase(string) {
@@ -74,6 +92,18 @@ function toTitleCase(string) {
 function arrayToLowerCase(array) {
     return array.map(e => {
         return e.toLowerCase();
+    })
+}
+
+function sortCaseInsensitive(array) {
+    return array.sort(function (a, b) {
+        return a.toLowerCase().localeCompare(b.toLowerCase());
+    })
+}
+
+function sumArray(array) {
+    return array.reduce((p, c) => {
+        return p+c;
     })
 }
 
@@ -98,7 +128,8 @@ function addToLoadedProducts(card, product) {
         "card": card,
         "product": product,
         "brandCriteriaMet": false,
-        "criteriaMet": 0
+        "tagCriteriaMet": 0,
+        "priceCriteriaMet": false
     }
     loadedProducts.push(productObject);
 }
@@ -149,14 +180,14 @@ function getFilterLists(products) {
         }
         //add unique tags
         pTags.forEach((t) => {
-            if (t && !tags.includes(toTitleCase(t))) {
-                tags.push(toTitleCase(t));
+            if (t && !tags.includes(t)) {
+                tags.push(t);
             }
         })
     })
     return {
-        brands: brands.sort(),
-        tags: tags.sort()
+        brands: sortCaseInsensitive(brands),
+        tags: sortCaseInsensitive(tags)
     };
 }
 
@@ -171,7 +202,7 @@ function createProductCard(image, brand, name, price) {
         <span class="product-brand">${brand ? brand.toUpperCase() : placeholderProductValues.brand}</span>
         <span class="product-name">${name}</span>
         <span class="product-price">$${price}</span>
-        <button class="add-to-cart-button">ADD TO CART</button>
+        <button class="add-to-cart-button">ADD TO BAG</button>
     `
     return card;
 }
@@ -196,31 +227,40 @@ function populateProductContainer(products) {
 
 
 
-function createCheckBoxAndLabel(value, labelText, category) {
+function createCheckBoxAndLabel(value, labelText, searchKey) {
     // labelText: string, value: string
     // return: a div element containing a checkbox with value=value, and a label for the checkbox with innerText=value
-    
     value = value.toLowerCase()
 
     // create checkbox
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.value = value;
-    checkbox.name = value;
-    if (category === strings.brand){
-        checkbox.classList.add("brand-checkbox");
-    } else {
-        checkbox.classList.add("other-filter-checkbox");
+    checkbox.name = value.toString(10);
+    switch (searchKey) {
+        case strings.brand:
+            checkbox.classList.add(classNames.brandCheckbox);
+            break;
+        case strings.tagList:
+            checkbox.classList.add(classNames.tagCheckbox);
+            break;
+        case strings.productColours:
+        case strings.price:
+            checkbox.classList.add(classNames.priceCheckbox);
+            break;
     }
 
     // add checkbox event listener
     checkbox.addEventListener('change', function() {
         checkedBoxesCount = countCheckedBoxes();
-        if (checkedBoxesCount.brandFilters + checkedBoxesCount.otherFilters === 1) {
+        if (sumArray([checkedBoxesCount.brandFilters, checkedBoxesCount.tagFilters, checkedBoxesCount.priceFilters]) === 1) {
             changeDisplayOfAllProductCards("none");
         }
-        filterProducts(category, value, this.checked);
-        if (checkedBoxesCount.brandFilters + checkedBoxesCount.otherFilters === 0) {
+
+        filterProducts(searchKey, value, this.checked);
+        showOrHideFilteredProductCards();
+
+        if (sumArray([checkedBoxesCount.brandFilters, checkedBoxesCount.tagFilters, checkedBoxesCount.priceFilters]) === 0) {
             changeDisplayOfAllProductCards(strings.productCardDisplay);
         }
     })
@@ -228,7 +268,8 @@ function createCheckBoxAndLabel(value, labelText, category) {
     // create label
     const label = document.createElement("label");
     label.for = value;
-    label.innerText = toTitleCase(labelText);
+    // change label to titlecase if it's a brand or in all lowercase
+    label.innerHTML = searchKey === strings.brand || labelText === labelText.toLowerCase() ? toTitleCase(labelText) : labelText;
 
     // create container and append checkbox + label
     const container = document.createElement("div");
@@ -239,7 +280,7 @@ function createCheckBoxAndLabel(value, labelText, category) {
 
 }
 
-function populateFilterContainer(filterContainer, array, title, key) {
+function populateFilterContainer(filterContainer, filterValues, title, key) {
     // filterContainer: element to which to append children, array: array of filter values
     // populate the filter container with filter checkboxes and labels
     // return: none
@@ -251,35 +292,71 @@ function populateFilterContainer(filterContainer, array, title, key) {
     filterContainer.appendChild(h2);
 
     // create and append filter checkboxes and labels
-    array.forEach(e => {
-        filterContainer.appendChild(createCheckBoxAndLabel(e, e, key)) // the value and label text are the same
+    
+    filterValues.forEach(filterValue => {
+        // determine label based on search key
+        let label = "";
+        switch (key) {
+            case strings.price:
+                // determine label based on price range
+                const priceIndex = prices.indexOf(filterValue)
+                switch (priceIndex){
+                    case 0:
+                        label = `Under $${prices[1]}`;
+                        break;
+                    case prices.length-1:
+                        label = `Over $${prices[prices.length-1]}`;
+                        break;
+                    default:
+                        label = `$${prices[priceIndex]} to $${prices[priceIndex+1]}`;
+                        break;
+                };
+                break;
+            default:
+                label = filterValue;
+                break;
+        }
+        filterContainer.appendChild(createCheckBoxAndLabel(filterValue, label, key))
     })
+    
 }
 
 function filterProducts(key, value, checked) {
-
-    // determine if products match the search value
-    switch (key){
-        case strings.brand:
-            loadedProducts.forEach(e => {
+    // key: the string object key to be searched on, value: the string value being searched for, checked: boolean whether the checkbox is being checked or unchecked
+    
+    // determine which loaded products match the search value
+    loadedProducts.forEach(e => {
+        switch (key){   // change search conditions based on the key being searched on
+            case strings.brand:
+                // simple evaluation of matching brand names
                 if (e.product[key].toLowerCase() === value.toLowerCase()) {
-                    changeCriteriaMet(e, checked, true);
+                    changeCriteriaMet(e, checked, true); // change brandCriteriaMet
                 }
-            })
-            break;
-        case strings.tagList:
-            loadedProducts.forEach(e => {
+                break;
+            case strings.tagList:
+                // check if the value matches anything in the tag list
                 if (arrayToLowerCase(e.product[key]).includes(value.toLowerCase())) {
-                    changeCriteriaMet(e, checked);
+                    changeCriteriaMet(e, checked);  // increment criteriaMet
                 }
-            })
-            break;
-    }
+                break;
+                // check if any colour in the colour list meets the value
+            case strings.productColours:
+                break;
+            case strings.price:
+                if (e.product[key])
+                break;
+        }
+    })
 
+    
+}
 
+function showOrHideFilteredProductCards() {
     const checkedBoxesCount = countCheckedBoxes();
     loadedProducts.forEach(e => {
-        if (e.criteriaMet === checkedBoxesCount.otherFilters && ((checkedBoxesCount.brandFilters > 0 && e.brandCriteriaMet) || checkedBoxesCount.brandFilters === 0)) {
+        // display cards if the product meets the criteria
+        // if
+        if (e.tagCriteriaMet === checkedBoxesCount.tagFilters && ((checkedBoxesCount.brandFilters > 0 && e.brandCriteriaMet) || checkedBoxesCount.brandFilters === 0)) {
             e.card.style.display = strings.productCardDisplay;
         } else {
             e.card.style.display = strings.none;
@@ -293,9 +370,9 @@ function changeCriteriaMet (product, checked, brand = false) {
         product.brandCriteriaMet = checked;
     } else {
         if (checked) { 
-            product.criteriaMet++;
+            product.tagCriteriaMet++;
         } else {
-            product.criteriaMet--;
+            product.tagCriteriaMet--;
         }
     } 
 }
@@ -306,10 +383,15 @@ function changeDisplayOfAllProductCards(display) {
 
 function countCheckedBoxes() {
     return {
-        "brandFilters": document.querySelectorAll(".brand-checkbox:checked").length,
-        "otherFilters": document.querySelectorAll(".other-filter-checkbox:checked").length
+        "brandFilters": getCheckedCheckboxesLength(classNames.brandCheckbox),
+        "tagFilters": getCheckedCheckboxesLength(classNames.tagCheckbox),
+        "priceFilters": getCheckedCheckboxesLength(classNames.priceCheckbox)
     };
 
+}
+
+function getCheckedCheckboxesLength(className) {
+    return document.querySelectorAll(`.${className}:checked`).length
 }
 
 function test(){
@@ -317,6 +399,8 @@ function test(){
     populateFilterContainer(divBrandFilter, filterLists.brands, "brands", strings.brand);
     populateFilterContainer(divTagFilter, filterLists.tags, "tags", strings.tagList);
     populateProductContainer(testValues);
+    populateFilterContainer(divPriceFilter, prices, "price", strings.price);
+
 }
 
 test();
