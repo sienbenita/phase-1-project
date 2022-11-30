@@ -1,6 +1,6 @@
 // *** VARIABLES ***
 const allProductTypes = ["blush", "bronzer", "eyebrow", "eyeliner", "eyeshadow", "foundation", "lip_liner", "lipstick", "mascara", "nail_polish"]
-const prices = ["0", "10", "20"];
+const prices = ["0", "10", "20", "30"];
 const placeholderProductValues = {
     brand: "Uncle Joe's",
     image_link: "./images/cosmetics.png",
@@ -46,16 +46,21 @@ const classNames = {
     priceCheckbox: "price-checkbox",
 }
 
-// array of objects: 
-// {
-//     card: element, 
-//     product: object,
-//     brandCriteriaMet: boolean,
-//     criteriaMet: number
-// }
-let loadedProducts = [];
+let loadedProducts = [];    // all productObjects that are loaded on the page
 
-// ***QUERY SELECTORS***
+// *** CONSTRUCTORS *** 
+class productObject {
+    constructor(card, product, brandCriteriaMet, tagCriteriaMet, priceCriteriaMet) {
+        // card: element, product: object, brandCriteriaMet, priceCriteriaMet: boolean, tagCriteriaMet: int
+        this.card = card;
+        this.product = product;
+        this.brandCriteriaMet = brandCriteriaMet;
+        this.tagCriteriaMet = tagCriteriaMet;
+        this.priceCriteriaMet = priceCriteriaMet;
+    }
+}
+
+// *** QUERY SELECTORS ***
 const divProductContainer = document.querySelector("#product-container");
 const btnsCategorySelector = document.querySelectorAll(".category-selector");
 const divBrandFilter = document.querySelector("#brand-filter");
@@ -95,6 +100,12 @@ function arrayToLowerCase(array) {
     })
 }
 
+function arrayToFloat(array){
+    return array.map(e => {
+        return parseFloat(e);
+    })
+}
+
 function sortCaseInsensitive(array) {
     return array.sort(function (a, b) {
         return a.toLowerCase().localeCompare(b.toLowerCase());
@@ -123,15 +134,7 @@ function addToLoadedProducts(card, product) {
     // card: element, product: object
     // create an object containing the card and product and push it to the loadedObjects array
     // return: none
-
-    const productObject = {
-        "card": card,
-        "product": product,
-        "brandCriteriaMet": false,
-        "tagCriteriaMet": 0,
-        "priceCriteriaMet": false
-    }
-    loadedProducts.push(productObject);
+    loadedProducts.push(new productObject(card, product, false, 0, false));
 }
 
 function addProductImageErrorListenerToLast(placeholder) {
@@ -299,7 +302,7 @@ function populateFilterContainer(filterContainer, filterValues, title, key) {
         switch (key) {
             case strings.price:
                 // determine label based on price range
-                const priceIndex = prices.indexOf(filterValue)
+                const priceIndex = checkPriceIndex(filterValue);
                 switch (priceIndex){
                     case 0:
                         label = `Under $${prices[1]}`;
@@ -325,25 +328,45 @@ function filterProducts(key, value, checked) {
     // key: the string object key to be searched on, value: the string value being searched for, checked: boolean whether the checkbox is being checked or unchecked
     
     // determine which loaded products match the search value
-    loadedProducts.forEach(e => {
+    loadedProducts.forEach(productObject => {
+        const productValue = productObject.product[key];
         switch (key){   // change search conditions based on the key being searched on
             case strings.brand:
                 // simple evaluation of matching brand names
-                if (e.product[key].toLowerCase() === value.toLowerCase()) {
-                    changeCriteriaMet(e, checked, true); // change brandCriteriaMet
+                if (productValue.toLowerCase() === value.toLowerCase()) {
+                    changeCriteriaMet(productObject, checked, strings.brand); // change brandCriteriaMet
                 }
                 break;
             case strings.tagList:
                 // check if the value matches anything in the tag list
-                if (arrayToLowerCase(e.product[key]).includes(value.toLowerCase())) {
-                    changeCriteriaMet(e, checked);  // increment criteriaMet
+                if (arrayToLowerCase(productValue).includes(value.toLowerCase())) {
+                    changeCriteriaMet(productObject, checked, strings.tagList);  // increment criteriaMet
                 }
                 break;
-                // check if any colour in the colour list meets the value
             case strings.productColours:
+                // check if any colour in the colour list meets the value
                 break;
             case strings.price:
-                if (e.product[key])
+                // check if product price matches the price range
+                const priceIndex = checkPriceIndex(value);
+                const floatPrices = arrayToFloat(prices);
+                switch (priceIndex){
+                    case 0:
+                        if (productValue <= floatPrices[1]) {
+                            changeCriteriaMet(productObject, checked, strings.price);
+                        }
+                        break;
+                    case prices.length-1:
+                        if (productValue >= floatPrices[prices.length-1]) {
+                            changeCriteriaMet(productObject, checked, strings.price);
+                        }
+                        break;
+                    default:
+                        if (productValue >= floatPrices[priceIndex] && productValue <= floatPrices[priceIndex+1]) {
+                            changeCriteriaMet(productObject, checked, strings.price);
+                        }
+                        break;
+                };
                 break;
         }
     })
@@ -356,8 +379,14 @@ function showOrHideFilteredProductCards() {
     loadedProducts.forEach(e => {
         // display cards if the product meets the criteria
         // if
-        if (e.tagCriteriaMet === checkedBoxesCount.tagFilters && ((checkedBoxesCount.brandFilters > 0 && e.brandCriteriaMet) || checkedBoxesCount.brandFilters === 0)) {
-            e.card.style.display = strings.productCardDisplay;
+        if (e.tagCriteriaMet === checkedBoxesCount.tagFilters) {
+            if ((checkedBoxesCount.brandFilters > 0 && e.brandCriteriaMet) || checkedBoxesCount.brandFilters === 0) {
+                console.log(":)")
+                console.log(e.priceCriteriaMet);
+                if ((checkedBoxesCount.priceFilters > 0 && e.priceCriteriaMet) || checkedBoxesCount.priceFilters === 0) {
+                    e.card.style.display = strings.productCardDisplay;
+                }
+            }
         } else {
             e.card.style.display = strings.none;
         }
@@ -365,9 +394,11 @@ function showOrHideFilteredProductCards() {
     })
 }
 
-function changeCriteriaMet (product, checked, brand = false) {
-    if (brand) {
+function changeCriteriaMet (product, checked, category) {
+    if (category === strings.brand) {
         product.brandCriteriaMet = checked;
+    } else if (category === strings.price){
+        product.priceCriteriaMet = checked;
     } else {
         if (checked) { 
             product.tagCriteriaMet++;
@@ -379,6 +410,10 @@ function changeCriteriaMet (product, checked, brand = false) {
 
 function changeDisplayOfAllProductCards(display) {
     loadedProducts.forEach(e => {e.card.style.display = display});
+}
+
+function checkPriceIndex(price) {
+    return prices.indexOf(price);
 }
 
 function countCheckedBoxes() {
