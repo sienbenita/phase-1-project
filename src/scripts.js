@@ -1,3 +1,24 @@
+// *** CONSTRUCTORS *** 
+class ProductObject {
+    constructor(card, product, brandCriteriaMet, tagCriteriaMet, priceCriteriaMet, colourCriteriaMet) {
+        // card: element, product: object, brandCriteriaMet, priceCriteriaMet: boolean, tagCriteriaMet: int
+        this.card = card;
+        this.product = product;
+        this.brandCriteriaMet = brandCriteriaMet;
+        this.tagCriteriaMet = tagCriteriaMet;
+        this.priceCriteriaMet = priceCriteriaMet;
+        this.colourCriteriaMet = colourCriteriaMet;
+    }
+}
+
+class Colour {
+    constructor(colourName, hexCode) {
+        // colourName: string, hexCode: string hex code
+        this.colourName = colourName;
+        this.hexCode = hexCode;
+    }
+}
+
 // *** VARIABLES ***
 const allProductTypes = ["blush", "bronzer", "eyebrow", "eyeliner", "eyeshadow", "foundation", "lip_liner", "lipstick", "mascara", "nail_polish"]
 const prices = ["0", "10", "20", "30"];
@@ -19,8 +40,6 @@ const productColours = {
     "darkBrown": new Colour("dark brown", "#291b0a"),
 }
 
-//["maroon", "red", "orange", "yellow", "green", "blue", "pink", "purple", "grey"]
-
 const placeholderProductValues = {
     brand: "Uncle Joe's",
     image_link: "./images/cosmetics.png",
@@ -34,21 +53,24 @@ const testValues = [
         image_link: "./images/cosmetics.png",
         name: "Freshest",
         price: "0.00",
-        tag_list: ["vegan", "amazing"]
+        tag_list: ["vegan", "amazing"],
+        product_colors: ["#e08f2b", "#2b79e0"]
     }, 
     {
         brand: "Uncle Daniel's",
         image_link: "./images/cosmetics.png",
         name: "Dankest",
         price: "50.00",
-        tag_list: ["full gmo", "beautiful"]
+        tag_list: ["full gmo", "beautiful"],
+        product_colors: ["#a42be0"]
     },
     {
         brand: "Uncle Daniel's",
         image_link: "./images/cosmetics.png",
         name: "Moistest",
         price: "10.00",
-        tag_list: ["full gmo", "amazing"]
+        tag_list: ["amazing", "noice"],
+        product_colors: ["#2be049", "#e07714"]
     }
 ]
 
@@ -65,29 +87,10 @@ const classNames = {
     brandCheckbox: "brand-checkbox",
     tagCheckbox: "tag-checkbox",
     priceCheckbox: "price-checkbox",
+    colourCheckbox: "colour-checkbox",
 }
 
 let loadedProducts = [];    // all productObjects that are loaded on the page
-
-// *** CONSTRUCTORS *** 
-class ProductObject {
-    constructor(card, product, brandCriteriaMet, tagCriteriaMet, priceCriteriaMet) {
-        // card: element, product: object, brandCriteriaMet, priceCriteriaMet: boolean, tagCriteriaMet: int
-        this.card = card;
-        this.product = product;
-        this.brandCriteriaMet = brandCriteriaMet;
-        this.tagCriteriaMet = tagCriteriaMet;
-        this.priceCriteriaMet = priceCriteriaMet;
-    }
-}
-
-class Colour {
-    constructor(colourName, hexCode) {
-        // colourName: string, hexCode: string hex code
-        this.colourName = colourName;
-        this.hexCode = hexCode;
-    }
-}
 
 // *** QUERY SELECTORS ***
 const divProductContainer = document.querySelector("#product-container");
@@ -95,6 +98,7 @@ const btnsCategorySelector = document.querySelectorAll(".category-selector");
 const divBrandFilter = document.querySelector("#brand-filter");
 const divTagFilter = document.querySelector("#tag-filter");
 const divPriceFilter = document.querySelector("#price-filter");
+const divColourFilter = document.querySelector("#colour-filter");
 
 // *** PROTOTYPE FUNCTIONS ***
 
@@ -191,7 +195,7 @@ function addToLoadedProducts(card, product) {
     // card: element, product: object
     // create an object containing the card and product and push it to the loadedObjects array
     // return: none
-    loadedProducts.push(new ProductObject(card, product, false, 0, false));
+    loadedProducts.push(new ProductObject(card, product, false, 0, false, 0));
 }
 
 // *** DOM FUNCTIONS ***
@@ -210,20 +214,6 @@ function removeAllChildElements(parent) {
 
 function changeDisplayOfAllProductCards(display) {
     loadedProducts.forEach(e => {e.card.style.display = display});
-}
-
-function showOrHideFilteredProductCards() {
-    const checkedBoxesCount = countCheckedBoxes();
-    loadedProducts.forEach(e => {
-        // display cards if the product meets the criteria
-        // if
-        if ((e.tagCriteriaMet === checkedBoxesCount.tagFilters && ((checkedBoxesCount.brandFilters > 0 && e.brandCriteriaMet) || checkedBoxesCount.brandFilters === 0)) && ((checkedBoxesCount.priceFilters > 0 && e.priceCriteriaMet) || checkedBoxesCount.priceFilters === 0)) {
-            e.card.style.display = strings.productCardDisplay;
-        } else {
-            e.card.style.display = strings.none;
-        }
-        
-    })
 }
 
 // *** CREATE PRODUCT CARDS ***
@@ -262,12 +252,83 @@ function populateProductContainer(products) {
     })
 }
 
+// *** EVENT LISTENERS ***
+
+// category selectors
+function addCategorySelectorEventListener(buttons) {
+    buttons.forEach(cs => {cs.addEventListener("click", async function() {
+        // get array of product objects
+        const products = await fetchProductsByTypeOrCategory(cs.value)
+        // create and add product cards
+        populateProductContainer(products);
+
+        // populate filters
+        const filterLists = getFilterLists(products);
+        populateFilterContainer(divBrandFilter, filterLists.brands, "brands", strings.brand);
+        populateFilterContainer(divTagFilter, filterLists.tags, "tags", strings.tagList);
+        populateFilterContainer(divPriceFilter, prices, "price", strings.price);
+        populateFilterContainer(divColourFilter, Object.values(productColours), "colours", strings.productColours);
+
+        console.log(loadedProducts[0])
+    })});
+}
+
+function addProductImageErrorListenerToLast(placeholder) {
+    // placeholder: string image url
+    // add an event listener to the last product image
+    // if there is an error retrieving the image, use the placeholder image instead
+    // return: none
+    const productImages = document.querySelectorAll(".product-image");
+    const productImagesLast = productImages[productImages.length - 1];
+    productImagesLast.addEventListener("error", () => productImagesLast.src = placeholder);
+}
+
+// function addFilterCheckboxEventListener(checkbox, searchKey, value, checked) {
+//     checkbox.addEventListener('change', function() {
+//         checkedBoxesCount = countCheckedBoxes();
+//         console.log(checkedBoxesCount.values)
+//         if (checkedBoxesCount.values().sum() === 1) {
+//             changeDisplayOfAllProductCards(strings.none);
+//         }
+
+//         filterProducts(searchKey, value, checked);
+//         showOrHideFilteredProductCards();
+
+//         if (checkedBoxesCount.values.sum() === 0) {
+//             changeDisplayOfAllProductCards(strings.productCardDisplay);
+//         }
+//     })
+// }
+
+// *** FETCH FUNCTIONS ***
+
+async function fetchProductsByTypeOrCategory (searchTerm) {
+    // searchTerm: string to search
+    // fetch from API the products matching the type or category
+    // return: an array of product objects matching searchTerm
+
+    let response;
+    // if searchTerm is in the list of product types, use 'product_type' key
+    if (allProductTypes.includes(searchTerm)){    
+        response = await fetch(`https://makeup-api.herokuapp.com/api/v1/products.json?product_type=${searchTerm}`);
+    } 
+    // otherwise use the 'category' key
+    else {
+        response = await fetch(`https://makeup-api.herokuapp.com/api/v1/products.json?product_category=${searchTerm}`);
+    }
+
+    const products = await response.json();
+    return products;
+}
+
 // *** CREATE FILTERS ***
 
 function createCheckBoxAndLabel(value, labelText, searchKey) {
     // labelText: string, value: string
     // return: a div element containing a checkbox with value=value, and a label for the checkbox with innerText=value
-    value = value.toLowerCase()
+    if (typeof value === "string"){
+        value = value.toLowerCase()
+    }
 
     // create checkbox
     const checkbox = document.createElement("input");
@@ -282,6 +343,8 @@ function createCheckBoxAndLabel(value, labelText, searchKey) {
             checkbox.classList.add(classNames.tagCheckbox);
             break;
         case strings.productColours:
+            checkbox.classList.add(classNames.colourCheckbox);
+            break;
         case strings.price:
             checkbox.classList.add(classNames.priceCheckbox);
             break;
@@ -290,14 +353,14 @@ function createCheckBoxAndLabel(value, labelText, searchKey) {
     // add checkbox event listener
     checkbox.addEventListener('change', function() {
         checkedBoxesCount = countCheckedBoxes();
-        if ([checkedBoxesCount.brandFilters, checkedBoxesCount.tagFilters, checkedBoxesCount.priceFilters].sum() === 1) {
-            changeDisplayOfAllProductCards("none");
+        if (Object.values(checkedBoxesCount).sum() === 1) {
+            changeDisplayOfAllProductCards(strings.none);
         }
 
         filterProducts(searchKey, value, this.checked);
         showOrHideFilteredProductCards();
 
-        if ([checkedBoxesCount.brandFilters, checkedBoxesCount.tagFilters, checkedBoxesCount.priceFilters].sum() === 0) {
+        if (Object.values(checkedBoxesCount).sum() === 0) {
             changeDisplayOfAllProductCards(strings.productCardDisplay);
         }
     })
@@ -306,9 +369,11 @@ function createCheckBoxAndLabel(value, labelText, searchKey) {
 
     // create label
     const label = document.createElement("label");
-    label.for = value;
+    
     // change label to titlecase if it's a brand or in all lowercase
-    label.innerHTML = searchKey === strings.brand || labelText === labelText.toLowerCase() ? labelText.toTitleCase() : labelText;
+    //label.innerHTML = labelText;
+    label.innerHTML = searchKey !== strings.productColours || searchKey === strings.brand || labelText === labelText.toLowerCase() ? labelText.toTitleCase() : labelText;
+    label.for = value;
 
     // create container and append checkbox + label
     const container = document.createElement("div");
@@ -351,6 +416,14 @@ function populateFilterContainer(filterContainer, filterValues, title, key) {
                         break;
                 };
                 break;
+            case strings.productColours:
+                label = `
+                    <svg height="10" width="10">
+                        <circle cx="5" cy="5" r="5" fill="${filterValue.hexCode}" />
+                    </svg>
+                    ${filterValue.colourName.toTitleCase()}
+                    `;
+                break;
             default:
                 label = filterValue;
                 break;
@@ -360,75 +433,21 @@ function populateFilterContainer(filterContainer, filterValues, title, key) {
     
 }
 
-// *** EVENT LISTENERS ***
+// *** FILTER FUNCTIONS ***
 
-// category selectors
-function addCategorySelectorEventListener(buttons) {
-    buttons.forEach(cs => {cs.addEventListener("click", async function() {
-        // get array of product objects
-        const products = await fetchProductsByTypeOrCategory(cs.value)
-        // create and add product cards
-        populateProductContainer(products);
-
-        // populate filters
-        const filterLists = getFilterLists(products);
-        populateFilterContainer(divBrandFilter, filterLists.brands, "brands", strings.brand);
-        populateFilterContainer(divTagFilter, filterLists.tags, "tags", strings.tagList);
-        populateFilterContainer(divPriceFilter, prices, "price", strings.price);
-    })});
-}
-
-// if error in retrieving image, use default product image
-function addProductImageErrorListenerToLast(placeholder) {
-    // placeholder: string image url
-    // add an event listener to the last product image
-    // if there is an error retrieving the image, use the placeholder image instead
-    // return: none
-    const productImages = document.querySelectorAll(".product-image");
-    const productImagesLast = productImages[productImages.length - 1];
-    productImagesLast.addEventListener("error", () => productImagesLast.src = placeholder);
-}
-
-function addFilterCheckboxEventListener(checkbox, searchKey, value, checked) {
-    checkbox.addEventListener('change', function() {
-        checkedBoxesCount = countCheckedBoxes();
-        if ([checkedBoxesCount.brandFilters, checkedBoxesCount.tagFilters, checkedBoxesCount.priceFilters].sum() === 1) {
-            changeDisplayOfAllProductCards(strings.none);
+function showOrHideFilteredProductCards() {
+    const checkedBoxesCount = countCheckedBoxes();
+    loadedProducts.forEach(e => {
+        // display cards if the product meets the criteria
+        // if
+        if ((e.tagCriteriaMet === checkedBoxesCount.tagFilters && ((checkedBoxesCount.brandFilters > 0 && e.brandCriteriaMet) || checkedBoxesCount.brandFilters === 0)) && ((checkedBoxesCount.priceFilters > 0 && e.priceCriteriaMet) || checkedBoxesCount.priceFilters === 0) && ((checkedBoxesCount.colourFilters > 0 && e.colourCriteriaMet) || checkedBoxesCount.colourFilters === 0)) {  
+            e.card.style.display = strings.productCardDisplay;
+        } else {
+            e.card.style.display = strings.none;
         }
-
-        filterProducts(searchKey, value, checked);
-        showOrHideFilteredProductCards();
-
-        if ([checkedBoxesCount.brandFilters, checkedBoxesCount.tagFilters, checkedBoxesCount.priceFilters].sum() === 0) {
-            changeDisplayOfAllProductCards(strings.productCardDisplay);
-        }
+        
     })
 }
-
-// *** FETCH FUNCTIONS ***
-
-async function fetchProductsByTypeOrCategory (searchTerm) {
-    // searchTerm: string to search
-    // fetch from API the products matching the type or category
-    // return: an array of product objects matching searchTerm
-
-    let response;
-    // if searchTerm is in the list of product types, use 'product_type' key
-    if (allProductTypes.includes(searchTerm)){    
-        response = await fetch(`https://makeup-api.herokuapp.com/api/v1/products.json?product_type=${searchTerm}`);
-    } 
-    // otherwise use the 'category' key
-    else {
-        response = await fetch(`https://makeup-api.herokuapp.com/api/v1/products.json?product_category=${searchTerm}`);
-    }
-
-    const products = await response.json();
-    return products;
-}
-
-
-
-// *** FILTER FUNCTIONS ***
 
 function getFilterLists(products) {
     // products: array of product objects
@@ -479,6 +498,13 @@ function filterProducts(key, value, checked) {
                 break;
             case strings.productColours:
                 // check if any colour in the colour list meets the value
+                productValue.forEach(c => {
+                    const hexCode = c.hex_value;
+                    const colour = determineColourRange(hexCode);
+                    if (colour.colourName === value.colourName.toLowerCase()) {
+                        changeCriteriaMet(productObject, checked, strings.productColours);
+                    }
+                })
                 break;
             case strings.price:
                 // check if product price matches the price range
@@ -497,7 +523,6 @@ function filterProducts(key, value, checked) {
                         break;
                     default:
                         if (productValue >= floatPrices[priceIndex] && productValue < floatPrices[priceIndex+1]) {
-                            console.log("checked");
                             changeCriteriaMet(productObject, checked, strings.price);
                         }
                         break;
@@ -514,6 +539,12 @@ function changeCriteriaMet (product, checked, category) {
         product.brandCriteriaMet = checked;
     } else if (category === strings.price){
         product.priceCriteriaMet = checked;
+    } else if (category === strings.productColours){
+        if (checked) { 
+            product.colourCriteriaMet++;
+        } else {
+            product.colourCriteriaMet--;
+        }
     } else {
         if (checked) { 
             product.tagCriteriaMet++;
@@ -527,7 +558,8 @@ function countCheckedBoxes() {
     return {
         "brandFilters": getCheckedCheckboxesLength(classNames.brandCheckbox),
         "tagFilters": getCheckedCheckboxesLength(classNames.tagCheckbox),
-        "priceFilters": getCheckedCheckboxesLength(classNames.priceCheckbox)
+        "priceFilters": getCheckedCheckboxesLength(classNames.priceCheckbox),
+        "colourFilters": getCheckedCheckboxesLength(classNames.colourCheckbox),
     };
 
 }
@@ -606,8 +638,10 @@ function test(){
     populateFilterContainer(divTagFilter, filterLists.tags, "tags", strings.tagList);
     populateProductContainer(testValues);
     populateFilterContainer(divPriceFilter, prices, "price", strings.price);
+    populateFilterContainer(divColourFilter, Object.values(productColours), "colours", strings.productColours);
 
 }
 
 addCategorySelectorEventListener(btnsCategorySelector);
+
 test();
