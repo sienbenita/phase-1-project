@@ -75,6 +75,7 @@ const testValues = [
     }
 ]
 
+// strings used throughout the code
 const strings = {
     "productCardDisplay": "flex",
     "none": "none",
@@ -84,6 +85,7 @@ const strings = {
     "price": "price"
 }
 
+// html classnames
 const classNames = {
     brandCheckbox: "brand-checkbox",
     tagCheckbox: "tag-checkbox",
@@ -92,8 +94,9 @@ const classNames = {
 }
 
 let loadedProducts = [];    // all productObjects that are loaded on the page
-let cartProducts = [];
+let cartProducts = [];  // products in the cart
 
+// 
 const cartURL = "http://localhost:3000/cart_products";
 
 // *** QUERY SELECTORS ***
@@ -108,6 +111,7 @@ const divColourFilter = document.querySelector("#colour-filter");
 
 String.prototype.toTitleCase = function () {
     // convert string to title case
+
     // lowercase the string and split it into words
     const split = this.toLowerCase().split(" ");
     return split.reduce((p, c) => {
@@ -117,24 +121,32 @@ String.prototype.toTitleCase = function () {
 }
 
 Array.prototype.toLowerCase = function() {
+    // convert array of strings to lowercase
+
     return this.map(e => {
         return e.toLowerCase();
     })
 }
 
 Array.prototype.toFloat = function() {
+    // convert array of numbers to float
+
     return this.map(e => {
         return parseFloat(e);
     })
 }
 
 Array.prototype.sortCaseInsensitive = function () {
+    // sort array ignoring case
+
     return this.sort(function (a, b) {
         return a.toLowerCase().localeCompare(b.toLowerCase());
     })
 }
 
 Array.prototype.sum = function() {
+    // sum array of numbers
+
     return this.reduce((p, c) => {
         return p+c;
     })
@@ -143,6 +155,12 @@ Array.prototype.sum = function() {
 // *** GENERAL FUNCTIONS ***
 
 function hexToHSL(H) {
+    /* 
+    H: string hexcode
+    convert hexcode to HSL format
+    return: object containing h, s, l number values
+    */
+
     // Convert hex to RGB first
     let r = 0, g = 0, b = 0;
     if (H.length == 4) {
@@ -192,17 +210,28 @@ function hexToHSL(H) {
   }
 
 function checkPriceIndex(price) {
+    /* 
+    get the index of price in the prices array
+    return: number
+    */
+
     return prices.indexOf(price);
 }
 
 function addToLoadedProducts(id, card, product) {
-    // card: element, product: object
-    // create an object containing the card and product and push it to the loadedObjects array
-    // return: none
+    /* 
+    card: element, product: object
+    create an object containing the card and product and push it to the loadedObjects array
+    return: none
+    */
     loadedProducts.push(new ProductObject(id, card, product, false, 0, false, 0));
 }
 
 function svgCircle(fillColour) {
+    /*
+    fillColour: string hexcode
+    return: string html for an svg circle with fill=fillColour
+    */
     return `
         <svg height="10" width="10">
             <circle cx="5" cy="5" r="5" fill="${fillColour}" />
@@ -211,19 +240,38 @@ function svgCircle(fillColour) {
 }
 
 function generateProductId(product) {
+    /*
+    product: object containing brand and name
+    return: string id based on brand and name
+    */
     return (product.brand + product.name).replace(/\s+/g, '');
 }
 
 function generateProductColourId(productId, colour) {
+    /*
+    productId: string id, colour: string
+    return: string id based on id and colour
+    */
     return (productId + colour).replace(/\s+/g, '');
 }
+
+function findProductById(id, array) {
+    /*
+    id: string id, array: array of products
+    return: undefined if not found, product object otherwise
+    */
+    return array.find(p => p.id === id);
+}
+
 
 // *** FETCH FUNCTIONS ***
 
 async function fetchProductsByTypeOrCategory (searchTerm) {
-    // searchTerm: string to search
-    // fetch from API the products matching the type or category
-    // return: an array of product objects matching searchTerm
+    /*
+    searchTerm: string to search
+    fetch from API the products matching the type or category
+    return: an array of product objects matching searchTerm
+    */
 
     let response;
     // if searchTerm is in the list of product types, use 'product_type' key
@@ -235,19 +283,22 @@ async function fetchProductsByTypeOrCategory (searchTerm) {
         response = await fetch(`https://makeup-api.herokuapp.com/api/v1/products.json?product_category=${searchTerm}`);
     }
 
+    // get product objects
     const products = await response.json();
     return products;
 }
 
 async function fetchCartProducts() {
+    /*
+    fetch cart products from the server
+    update cartProducts with the fetched products
+    */
     const response = await fetch(cartURL);
     const data = await response.json();
     cartProducts = data;
 }
 
-//fetchCartProducts()
-
-// *** EVENT LISTENERS ***
+// *** NAVBAR FUNCTIONS ***
 
 // category selectors
 function addCategorySelectorEventListener(buttons) {
@@ -267,40 +318,33 @@ function addCategorySelectorEventListener(buttons) {
     })});
 }
 
-function addProductImageErrorListenerToLast(placeholder) {
-    // placeholder: string image url
-    // add an event listener to the last product image
-    // if there is an error retrieving the image, use the placeholder image instead
-    // return: none
-    const productImages = document.querySelectorAll(".product-image");
-    const productImagesLast = productImages[productImages.length - 1];
-    productImagesLast.addEventListener("error", () => productImagesLast.src = placeholder);
-}
-
 // function addFilterCheckboxEventListener(checkbox, searchKey, value, checked) {
 //     checkbox.addEventListener('change', function() {
 //         checkedBoxesCount = countCheckedBoxes();
-//         console.log(checkedBoxesCount.values)
-//         if (checkedBoxesCount.values().sum() === 1) {
+//         if (Object.values(checkedBoxesCount).sum() === 1) {
 //             changeDisplayOfAllProductCards(strings.none);
 //         }
 
 //         filterProducts(searchKey, value, checked);
 //         showOrHideFilteredProductCards();
 
-//         if (checkedBoxesCount.values.sum() === 0) {
+//         if (Object.values(checkedBoxesCount).sum() === 0) {
 //             changeDisplayOfAllProductCards(strings.productCardDisplay);
 //         }
 //     })
+
+//     return checkbox;
 // }
 
 
 // *** DOM FUNCTIONS ***
 
 function removeAllChildElements(parent) {
-    // parent: the element from which to remove all children
-    // remove all of the children of parent
-    // return: none
+    /*
+    parent: the element from which to remove all children
+    remove all of the children of parent
+    return: none
+    */
 
     let child = parent.lastElementChild;
     while (child) {
@@ -310,15 +354,21 @@ function removeAllChildElements(parent) {
 }
 
 function changeDisplayOfAllProductCards(display) {
+    /*
+    display: string
+    change all of the cards' display to 'display'
+    */
     loadedProducts.forEach(e => {e.card.style.display = display});
 }
 
 // *** CREATE PRODUCT CARDS ***
 
 function populateProductContainer(products) {
-    // products: array of product objects
-    // remove previous cards, generate new cards and append them to the product container
-    // return: none
+    /*
+    products: array of product objects
+    remove previous cards, generate new cards and append them to the product container
+    return: none
+    */
 
     // remove all cards on page
     loadedProducts = [];
@@ -329,15 +379,21 @@ function populateProductContainer(products) {
         const id = generateProductId(product);
         const card = createProductCard(id, product.image_link, product.brand, product.name, product.price, product.product_colors);
         divProductContainer.appendChild(card);
+        
         addProductImageErrorListenerToLast(placeholderProductValues.image_link);
+        
         addToLoadedProducts(id, card, product);
     })
+    
+    // add event listeners to the generated 'add to cart' buttons
     addAddToCartEventListeners();
 }
 
 function createProductCard(id, image, brand, name, price, colours) {
-    // image: string url, brand: string, name: string, price: string decimal number
-    // return: product card div element
+    /*
+    image: string url, brand: string, name: string, price: string decimal number
+    return: product card div element
+    */
 
     const card = document.createElement("div");
     card.classList.add("product-card");
@@ -352,13 +408,23 @@ function createProductCard(id, image, brand, name, price, colours) {
 }
 
 function createColourSelect(id, colours) {
+    /*
+    id: string id, colours: array of colour objects
+    return: string html of a form containing a dropdown with an 'add to cart' button
+    */
+
+    // form and select declaration
     let html = `
         <form class="dropdown-bag-container">
         <select name="colour-select" class="colour-select">
     `;
+
+    // add all of the colour options
     colours.forEach(c => {
         html += `<option value="${c.colour_name.toLowerCase()}"> ${c.colour_name.toTitleCase()}</option>`
     });
+
+    // button declaration
     html += `
         </select>
         <button type="submit" value="${id}" class="add-to-cart-button icon-add-to-cart-button"><img src="./images/shopping-bag.png"></button>
@@ -368,29 +434,65 @@ function createColourSelect(id, colours) {
     return html;
 }
 
+function addProductImageErrorListenerToLast(placeholder) {
+    /*
+    placeholder: string image url
+    add an event listener to the last product image
+    if there is an error retrieving the image, use the placeholder image instead
+    return: none
+    */
+    const productImages = document.querySelectorAll(".product-image");
+    const productImagesLast = productImages[productImages.length - 1];
+    productImagesLast.addEventListener("error", () => productImagesLast.src = placeholder);
+}
+
+// *** ADD TO CART FUNCTIONS ***
+
 function addAddToCartEventListeners() {
+    /*
+    Add event listeners to all of the 'add to cart' buttons that are loaded
+    */
+
+    // find all of the 'add to cart' buttons
     const btnsAddToCart = document.querySelectorAll(".add-to-cart-button");
+    
+    // add event listeners to each
     btnsAddToCart.forEach(btn => {
-        //btn.addEventListener("click", postProductToCart(id, colour));
         btn.addEventListener("click", async function (e) {
             e.preventDefault();
+
+            // update cartProducts
             await fetchCartProducts();
+
+            // initialise values
             const colourSelect = btn.parentNode.querySelector(".colour-select");
             const colour = colourSelect.options[colourSelect.selectedIndex].text;
             const productId = btn.value;
             const productColourId = generateProductColourId(productId, colour);
             const productInCart = findProductById(productColourId, cartProducts);
+            
             if (productInCart) {
+                // if product is already in cart, patch quantity
                 productInCart.quantity++
                 patchProductQuantityInCart(productInCart);
             } else {
+                // if not in cart, post new product
                 postProductToCart(productId, colour);
             }
+
+            // update cartProducts again
+            await fetchCartProducts();
         });
     })
 }
 
 function postProductToCart(productId, colour) {
+    /*
+    productId: string, colour: string
+    send post request to add a product matching productId to cart
+    */
+
+    // configure request
     const configurationObject = {
         method: "POST",
         headers: {
@@ -398,13 +500,14 @@ function postProductToCart(productId, colour) {
             "Accept": "application/json"
         },
         body: JSON.stringify({
-            id: generateProductColourId(productId, colour),
-            product: findProductById(productId, loadedProducts).product,
+            id: generateProductColourId(productId, colour),     // new id containing colour
+            product: findProductById(productId, loadedProducts).product,    // product object
             selectedColour: colour,
             quantity: 1
         })
     }
 
+    // send request
     fetch(cartURL, configurationObject)
     .then(function (response) {
         return response.json();
@@ -412,6 +515,12 @@ function postProductToCart(productId, colour) {
 }
 
 function patchProductQuantityInCart(productInCart) {
+    /*
+    productInCart: product object with edited quantity
+    send patch request to update quantity
+    */
+
+    // configure request
     const configurationObject = {
         method: "PATCH",
         headers: {
@@ -419,22 +528,15 @@ function patchProductQuantityInCart(productInCart) {
             "Accept": "application/json"
         },
         body: JSON.stringify({
-            quantity: productInCart.quantity
+            quantity: productInCart.quantity    // send the updated quantity
         })
     }
 
+    // send request
     fetch(`${cartURL}/${productInCart.id}`, configurationObject)
     .then(function (response) {
         return response.json();
       })
-}
-
-function findProductById(id, array) {
-    return array.find(p => p.id === id);
-}
-
-function checkProductInArray(id, array) {
-    return array.some(p => p.id === id);
 }
 
 // *** CREATE FILTERS ***
@@ -447,7 +549,7 @@ function createCheckBoxAndLabel(value, labelText, searchKey) {
     }
 
     // create checkbox
-    const checkbox = document.createElement("input");
+    let checkbox = document.createElement("input");
     checkbox.type = "checkbox";
     checkbox.value = value;
     checkbox.name = value.toString(10);
@@ -467,21 +569,21 @@ function createCheckBoxAndLabel(value, labelText, searchKey) {
     }
 
     // add checkbox event listener
-    checkbox.addEventListener('change', function() {
-        checkedBoxesCount = countCheckedBoxes();
-        if (Object.values(checkedBoxesCount).sum() === 1) {
-            changeDisplayOfAllProductCards(strings.none);
-        }
+    // checkbox.addEventListener('change', function() {
+    //     checkedBoxesCount = countCheckedBoxes();
+    //     if (Object.values(checkedBoxesCount).sum() === 1) {
+    //         changeDisplayOfAllProductCards(strings.none);
+    //     }
 
-        filterProducts(searchKey, value, this.checked);
-        showOrHideFilteredProductCards();
+    //     filterProducts(searchKey, value, this.checked);
+    //     showOrHideFilteredProductCards();
 
-        if (Object.values(checkedBoxesCount).sum() === 0) {
-            changeDisplayOfAllProductCards(strings.productCardDisplay);
-        }
-    })
+    //     if (Object.values(checkedBoxesCount).sum() === 0) {
+    //         changeDisplayOfAllProductCards(strings.productCardDisplay);
+    //     }
+    // })
 
-    //addFilterCheckboxEventListener(checkbox, searchKey, value, this.checked);
+    checkbox = addFilterCheckboxEventListener(checkbox, searchKey, value, this.checked);
 
     // create label
     const label = document.createElement("label");
@@ -533,12 +635,14 @@ function populateFilterContainer(filterContainer, filterValues, title, key) {
                 };
                 break;
             case strings.productColours:
+                // if it's a colour, create a coloured circle and use the colour name
                 label = `
                     ${svgCircle(filterValue.hexCode)}
                     ${filterValue.colourName.toTitleCase()}
                     `;
                 break;
             default:
+                // otherwise use plain label
                 label = filterValue;
                 break;
         }
@@ -550,11 +654,19 @@ function populateFilterContainer(filterContainer, filterValues, title, key) {
 // *** FILTER FUNCTIONS ***
 
 function showOrHideFilteredProductCards() {
+    /*
+    change whether cards are hidden or visible based on whether they meet filter criteria
+    */
     const checkedBoxesCount = countCheckedBoxes();
     loadedProducts.forEach(e => {
         // display cards if the product meets the criteria
-        // if
         if ((e.tagCriteriaMet === checkedBoxesCount.tagFilters && ((checkedBoxesCount.brandFilters > 0 && e.brandCriteriaMet) || checkedBoxesCount.brandFilters === 0)) && ((checkedBoxesCount.priceFilters > 0 && e.priceCriteriaMet) || checkedBoxesCount.priceFilters === 0) && ((checkedBoxesCount.colourFilters > 0 && e.colourCriteriaMet) || checkedBoxesCount.colourFilters === 0)) {  
+            /* 
+            tag: tag_list contains all tags
+            brand: brand is one of the selected brands
+            price: price is in one of selected price ranges
+            colour: product_colours contains at least one of the colours
+            */
             e.card.style.display = strings.productCardDisplay;
         } else {
             e.card.style.display = strings.none;
@@ -626,16 +738,19 @@ function filterProducts(key, value, checked) {
                 const floatPrices = prices.toFloat();
                 switch (priceIndex){
                     case 0:
+                        // lowest : less than
                         if (productValue < floatPrices[1]) {
                             changeCriteriaMet(productObject, checked, strings.price);
                         }
                         break;
                     case prices.length-1:
+                        // highest: more than
                         if (productValue >= floatPrices[prices.length-1]) {
                             changeCriteriaMet(productObject, checked, strings.price);
                         }
                         break;
                     default:
+                        // other: between
                         if (productValue >= floatPrices[priceIndex] && productValue < floatPrices[priceIndex+1]) {
                             changeCriteriaMet(productObject, checked, strings.price);
                         }
@@ -649,6 +764,10 @@ function filterProducts(key, value, checked) {
 }
 
 function changeCriteriaMet (product, checked, category) {
+    /*
+    product: object, checked: boolean, category: string
+    alter the product's 'category' criteriaMet value based on 'checked'
+    */
     if (category === strings.brand) {
         product.brandCriteriaMet = checked;
     } else if (category === strings.price){
@@ -669,6 +788,9 @@ function changeCriteriaMet (product, checked, category) {
 }
 
 function countCheckedBoxes() {
+    /*
+    return: object containing number of checked checkboxes in each filter
+    */
     return {
         "brandFilters": getCheckedCheckboxesLength(classNames.brandCheckbox),
         "tagFilters": getCheckedCheckboxesLength(classNames.tagCheckbox),
@@ -679,10 +801,20 @@ function countCheckedBoxes() {
 }
 
 function getCheckedCheckboxesLength(className) {
+    /*
+    className: string html class name
+    nodelist containing checked checkboxes under className
+    */
     return document.querySelectorAll(`.${className}:checked`).length
 }
 
 function determineColourRange(hex) {
+    /*
+    hex: string hex code
+    calculate colour range based on hsl values
+    return: string colour name
+    */
+
     const {h, s, l} = hexToHSL(hex);
     let colour;
     // grey
