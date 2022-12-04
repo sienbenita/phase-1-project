@@ -1,7 +1,8 @@
 // *** CONSTRUCTORS *** 
 class ProductObject {
-    constructor(card, product, brandCriteriaMet, tagCriteriaMet, priceCriteriaMet, colourCriteriaMet) {
-        // card: element, product: object, brandCriteriaMet, priceCriteriaMet: boolean, tagCriteriaMet: int
+    constructor(id, card, product, brandCriteriaMet, tagCriteriaMet, priceCriteriaMet, colourCriteriaMet) {
+        // id: string, card: element, product: object, brandCriteriaMet, priceCriteriaMet: boolean, tagCriteriaMet: int
+        this.id = id;
         this.card = card;
         this.product = product;
         this.brandCriteriaMet = brandCriteriaMet;
@@ -54,7 +55,7 @@ const testValues = [
         name: "Freshest",
         price: "0.00",
         tag_list: ["vegan", "amazing"],
-        product_colors: ["#e08f2b", "#2b79e0"]
+        product_colors: [{"hex_value":"#7C524F","colour_name":"27 Kisses"},{"hex_value":"#884955","colour_name":"Amalia"},{"hex_value":"#9F3D2A","colour_name":"Bitter Sweet"},{"hex_value":"#542A26","colour_name":"Dirty Diana"},{"hex_value":"#793D48","colour_name":"Dreamtime"},{"hex_value":"#BB6E60","colour_name":"Fairy Tale"},{"hex_value":"#BA8285","colour_name":"Halo"},{"hex_value":"#71474E","colour_name":"Just Like Jade"},{"hex_value":"#AF8475","colour_name":"Naked"},{"hex_value":"#D65572","colour_name":"Precious"},{"hex_value":"#8F1A23","colour_name":"Revenge"},{"hex_value":"#8B383D","colour_name":"Ruby Rose"},{"hex_value":"#C83752","colour_name":"Survivor"},{"hex_value":"#784F5F","colour_name":"Viva"},{"hex_value":"#672F57","colour_name":"Zo Zo"}]
     }, 
     {
         brand: "Uncle Daniel's",
@@ -62,7 +63,7 @@ const testValues = [
         name: "Dankest",
         price: "50.00",
         tag_list: ["full gmo", "beautiful"],
-        product_colors: ["#a42be0"]
+        product_colors: [{"hex_value":"#B97271","colour_name":"Goal Digger"}]
     },
     {
         brand: "Uncle Daniel's",
@@ -70,7 +71,7 @@ const testValues = [
         name: "Moistest",
         price: "10.00",
         tag_list: ["amazing", "noice"],
-        product_colors: ["#2be049", "#e07714"]
+        product_colors: [{"hex_value":"#F2DEC3","colour_name":"Fair 05"},{"hex_value":"#793C36","colour_name":"Ziggie"}]
     }
 ]
 
@@ -91,6 +92,9 @@ const classNames = {
 }
 
 let loadedProducts = [];    // all productObjects that are loaded on the page
+let cartProducts = [];
+
+const cartURL = "http://localhost:3000/cart_products";
 
 // *** QUERY SELECTORS ***
 const divProductContainer = document.querySelector("#product-container");
@@ -135,6 +139,8 @@ Array.prototype.sum = function() {
         return p+c;
     })
 }
+
+// *** GENERAL FUNCTIONS ***
 
 function hexToHSL(H) {
     // Convert hex to RGB first
@@ -185,72 +191,61 @@ function hexToHSL(H) {
     };
   }
 
-// *** GENERAL FUNCTIONS ***
-
 function checkPriceIndex(price) {
     return prices.indexOf(price);
 }
 
-function addToLoadedProducts(card, product) {
+function addToLoadedProducts(id, card, product) {
     // card: element, product: object
     // create an object containing the card and product and push it to the loadedObjects array
     // return: none
-    loadedProducts.push(new ProductObject(card, product, false, 0, false, 0));
+    loadedProducts.push(new ProductObject(id, card, product, false, 0, false, 0));
 }
 
-// *** DOM FUNCTIONS ***
-
-function removeAllChildElements(parent) {
-    // parent: the element from which to remove all children
-    // remove all of the children of parent
-    // return: none
-
-    let child = parent.lastElementChild;
-    while (child) {
-        parent.removeChild(child);
-        child = parent.lastElementChild;
-    }
-}
-
-function changeDisplayOfAllProductCards(display) {
-    loadedProducts.forEach(e => {e.card.style.display = display});
-}
-
-// *** CREATE PRODUCT CARDS ***
-
-function createProductCard(image, brand, name, price) {
-    // image: string url, brand: string, name: string, price: string decimal number
-    // return: product card div element
-
-    const card = document.createElement("div");
-    card.classList.add("product-card");
-    card.innerHTML = `
-        <img class="product-image" src="${image}">
-        <span class="product-brand">${brand ? brand.toUpperCase() : placeholderProductValues.brand}</span>
-        <span class="product-name">${name}</span>
-        <span class="product-price">$${price}</span>
-        <button class="add-to-cart-button">ADD TO BAG</button>
+function svgCircle(fillColour) {
+    return `
+        <svg height="10" width="10">
+            <circle cx="5" cy="5" r="5" fill="${fillColour}" />
+        </svg>
     `
-    return card;
 }
 
-function populateProductContainer(products) {
-    // products: array of product objects
-    // remove previous cards, generate new cards and append them to the product container
-    // return: none
-
-    // remove all cards on page
-    loadedProducts = [];
-    removeAllChildElements(divProductContainer);
-
-    // create and append cards
-    products.forEach(product => {
-        const card = createProductCard(product.image_link, product.brand, product.name, product.price);
-        divProductContainer.appendChild(card);
-        addProductImageErrorListenerToLast(placeholderProductValues.image_link);
-        addToLoadedProducts(card, product);
-    })
+function generateProductId(product) {
+    return (product.brand + product.name).replace(/\s+/g, '');
 }
+
+function generateProductColourId(productId, colour) {
+    return (productId + colour).replace(/\s+/g, '');
+}
+
+// *** FETCH FUNCTIONS ***
+
+async function fetchProductsByTypeOrCategory (searchTerm) {
+    // searchTerm: string to search
+    // fetch from API the products matching the type or category
+    // return: an array of product objects matching searchTerm
+
+    let response;
+    // if searchTerm is in the list of product types, use 'product_type' key
+    if (allProductTypes.includes(searchTerm)){    
+        response = await fetch(`https://makeup-api.herokuapp.com/api/v1/products.json?product_type=${searchTerm}`);
+    } 
+    // otherwise use the 'category' key
+    else {
+        response = await fetch(`https://makeup-api.herokuapp.com/api/v1/products.json?product_category=${searchTerm}`);
+    }
+
+    const products = await response.json();
+    return products;
+}
+
+async function fetchCartProducts() {
+    const response = await fetch(cartURL);
+    const data = await response.json();
+    cartProducts = data;
+}
+
+//fetchCartProducts()
 
 // *** EVENT LISTENERS ***
 
@@ -269,7 +264,6 @@ function addCategorySelectorEventListener(buttons) {
         populateFilterContainer(divPriceFilter, prices, "price", strings.price);
         populateFilterContainer(divColourFilter, Object.values(productColours), "colours", strings.productColours);
 
-        console.log(loadedProducts[0])
     })});
 }
 
@@ -300,25 +294,147 @@ function addProductImageErrorListenerToLast(placeholder) {
 //     })
 // }
 
-// *** FETCH FUNCTIONS ***
 
-async function fetchProductsByTypeOrCategory (searchTerm) {
-    // searchTerm: string to search
-    // fetch from API the products matching the type or category
-    // return: an array of product objects matching searchTerm
+// *** DOM FUNCTIONS ***
 
-    let response;
-    // if searchTerm is in the list of product types, use 'product_type' key
-    if (allProductTypes.includes(searchTerm)){    
-        response = await fetch(`https://makeup-api.herokuapp.com/api/v1/products.json?product_type=${searchTerm}`);
-    } 
-    // otherwise use the 'category' key
-    else {
-        response = await fetch(`https://makeup-api.herokuapp.com/api/v1/products.json?product_category=${searchTerm}`);
+function removeAllChildElements(parent) {
+    // parent: the element from which to remove all children
+    // remove all of the children of parent
+    // return: none
+
+    let child = parent.lastElementChild;
+    while (child) {
+        parent.removeChild(child);
+        child = parent.lastElementChild;
+    }
+}
+
+function changeDisplayOfAllProductCards(display) {
+    loadedProducts.forEach(e => {e.card.style.display = display});
+}
+
+// *** CREATE PRODUCT CARDS ***
+
+function populateProductContainer(products) {
+    // products: array of product objects
+    // remove previous cards, generate new cards and append them to the product container
+    // return: none
+
+    // remove all cards on page
+    loadedProducts = [];
+    removeAllChildElements(divProductContainer);
+
+    // create and append cards
+    products.forEach(product => {
+        const id = generateProductId(product);
+        const card = createProductCard(id, product.image_link, product.brand, product.name, product.price, product.product_colors);
+        divProductContainer.appendChild(card);
+        addProductImageErrorListenerToLast(placeholderProductValues.image_link);
+        addToLoadedProducts(id, card, product);
+    })
+    addAddToCartEventListeners();
+}
+
+function createProductCard(id, image, brand, name, price, colours) {
+    // image: string url, brand: string, name: string, price: string decimal number
+    // return: product card div element
+
+    const card = document.createElement("div");
+    card.classList.add("product-card");
+    card.innerHTML = `
+        <img class="product-image" src="${image}">
+        <span class="product-brand">${brand ? brand.toUpperCase() : placeholderProductValues.brand}</span>
+        <span class="product-name">${name}</span>
+        <span class="product-price">$${price}</span>
+        ${colours.length > 0 ? createColourSelect(id, colours) : `<button class="add-to-cart-button">ADD TO BAG</button>`}
+    `
+    return card;
+}
+
+function createColourSelect(id, colours) {
+    let html = `
+        <form class="dropdown-bag-container">
+        <select name="colour-select" class="colour-select">
+    `;
+    colours.forEach(c => {
+        html += `<option value="${c.colour_name.toLowerCase()}"> ${c.colour_name.toTitleCase()}</option>`
+    });
+    html += `
+        </select>
+        <button type="submit" value="${id}" class="add-to-cart-button icon-add-to-cart-button"><img src="./images/shopping-bag.png"></button>
+        </form>
+    `;
+
+    return html;
+}
+
+function addAddToCartEventListeners() {
+    const btnsAddToCart = document.querySelectorAll(".add-to-cart-button");
+    btnsAddToCart.forEach(btn => {
+        //btn.addEventListener("click", postProductToCart(id, colour));
+        btn.addEventListener("click", async function (e) {
+            e.preventDefault();
+            await fetchCartProducts();
+            const colourSelect = btn.parentNode.querySelector(".colour-select");
+            const colour = colourSelect.options[colourSelect.selectedIndex].text;
+            const productId = btn.value;
+            const productColourId = generateProductColourId(productId, colour);
+            const productInCart = findProductById(productColourId, cartProducts);
+            if (productInCart) {
+                productInCart.quantity++
+                patchProductQuantityInCart(productInCart);
+            } else {
+                postProductToCart(productId, colour);
+            }
+        });
+    })
+}
+
+function postProductToCart(productId, colour) {
+    const configurationObject = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+        body: JSON.stringify({
+            id: generateProductColourId(productId, colour),
+            product: findProductById(productId, loadedProducts).product,
+            selectedColour: colour,
+            quantity: 1
+        })
     }
 
-    const products = await response.json();
-    return products;
+    fetch(cartURL, configurationObject)
+    .then(function (response) {
+        return response.json();
+      })
+}
+
+function patchProductQuantityInCart(productInCart) {
+    const configurationObject = {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        },
+        body: JSON.stringify({
+            quantity: productInCart.quantity
+        })
+    }
+
+    fetch(`${cartURL}/${productInCart.id}`, configurationObject)
+    .then(function (response) {
+        return response.json();
+      })
+}
+
+function findProductById(id, array) {
+    return array.find(p => p.id === id);
+}
+
+function checkProductInArray(id, array) {
+    return array.some(p => p.id === id);
 }
 
 // *** CREATE FILTERS ***
@@ -418,9 +534,7 @@ function populateFilterContainer(filterContainer, filterValues, title, key) {
                 break;
             case strings.productColours:
                 label = `
-                    <svg height="10" width="10">
-                        <circle cx="5" cy="5" r="5" fill="${filterValue.hexCode}" />
-                    </svg>
+                    ${svgCircle(filterValue.hexCode)}
                     ${filterValue.colourName.toTitleCase()}
                     `;
                 break;

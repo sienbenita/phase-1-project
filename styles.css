@@ -266,6 +266,11 @@ h2 {
         margin-top: 20px;
     }
 
+    .dropdown-bag-container {
+        display: flex;
+        flex-direction: row;
+        margin-top: 5px;
+    }
     .add-to-cart-button {
         border: none;
         border-radius: 5px;
@@ -273,9 +278,23 @@ h2 {
         background-color: var(--pink-desat);
         height: 36px;
         visibility: hidden;
-        margin-top: 5px;
+        flex-shrink: 0;
     }
 
-    .product-card:hover .add-to-cart-button {
+    .icon-add-to-cart-button {
+        width: 40px;
+        height: 40px;
+        margin-left: 5px;
+    }
+
+    .icon-add-to-cart-button img {
+        width: 100%;
+    }
+
+    .product-card:hover .add-to-cart-button, .product-card:hover .icon-add-to-cart-button {
         visibility: visible;
+    }
+
+    .colour-select {
+        width:100%;
     }

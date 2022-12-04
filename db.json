@@ -1,0 +1,81 @@
+{
+  "cart_products": [
+    {
+      "id": "UncleJoe'sFreshest27Kisses",
+      "product": {
+        "brand": "Uncle Joe's",
+        "image_link": "./images/cosmetics.png",
+        "name": "Freshest",
+        "price": "0.00",
+        "tag_list": [
+          "vegan",
+          "amazing"
+        ],
+        "product_colors": [
+          {
+            "hex_value": "#7C524F",
+            "colour_name": "27 Kisses"
+          },
+          {
+            "hex_value": "#884955",
+            "colour_name": "Amalia"
+          },
+          {
+            "hex_value": "#9F3D2A",
+            "colour_name": "Bitter Sweet"
+          },
+          {
+            "hex_value": "#542A26",
+            "colour_name": "Dirty Diana"
+          },
+          {
+            "hex_value": "#793D48",
+            "colour_name": "Dreamtime"
+          },
+          {
+            "hex_value": "#BB6E60",
+            "colour_name": "Fairy Tale"
+          },
+          {
+            "hex_value": "#BA8285",
+            "colour_name": "Halo"
+          },
+          {
+            "hex_value": "#71474E",
+            "colour_name": "Just Like Jade"
+          },
+          {
+            "hex_value": "#AF8475",
+            "colour_name": "Naked"
+          },
+          {
+            "hex_value": "#D65572",
+            "colour_name": "Precious"
+          },
+          {
+            "hex_value": "#8F1A23",
+            "colour_name": "Revenge"
+          },
+          {
+            "hex_value": "#8B383D",
+            "colour_name": "Ruby Rose"
+          },
+          {
+            "hex_value": "#C83752",
+            "colour_name": "Survivor"
+          },
+          {
+            "hex_value": "#784F5F",
+            "colour_name": "Viva"
+          },
+          {
+            "hex_value": "#672F57",
+            "colour_name": "Zo Zo"
+          }
+        ]
+      },
+      "selectedColour": "27 Kisses",
+      "quantity": 18
+    }
+  ]
+}
