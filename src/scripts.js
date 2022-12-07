@@ -99,14 +99,6 @@ let cartProducts = [];  // products in the cart
 // 
 const cartURL = "http://localhost:3000/cart_products";
 
-// *** QUERY SELECTORS ***
-const divProductContainer = document.querySelector("#product-container");
-const btnsCategorySelector = document.querySelectorAll(".category-selector");
-const divBrandFilter = document.querySelector("#brand-filter");
-const divTagFilter = document.querySelector("#tag-filter");
-const divPriceFilter = document.querySelector("#price-filter");
-const divColourFilter = document.querySelector("#colour-filter");
-
 // *** PROTOTYPE FUNCTIONS ***
 
 String.prototype.toTitleCase = function () {
@@ -298,6 +290,15 @@ async function fetchCartProducts() {
     cartProducts = data;
 }
 
+// *** QUERY SELECTORS ***
+const divProductContainer = document.querySelector("#product-container");
+const btnsCategorySelector = document.querySelectorAll(".category-selector");
+const divBrandFilter = document.querySelector("#brand-filter");
+const divTagFilter = document.querySelector("#tag-filter");
+const divPriceFilter = document.querySelector("#price-filter");
+const divColourFilter = document.querySelector("#colour-filter");
+
+
 // *** NAVBAR FUNCTIONS ***
 
 // category selectors
@@ -310,32 +311,13 @@ function addCategorySelectorEventListener(buttons) {
 
         // populate filters
         const filterLists = getFilterLists(products);
-        populateFilterContainer(divBrandFilter, filterLists.brands, "brands", strings.brand);
-        populateFilterContainer(divTagFilter, filterLists.tags, "tags", strings.tagList);
-        populateFilterContainer(divPriceFilter, prices, "price", strings.price);
-        populateFilterContainer(divColourFilter, Object.values(productColours), "colours", strings.productColours);
+        populateFilterContainer(divBrandFilter, filterLists.brands, strings.brand);
+        populateFilterContainer(divTagFilter, filterLists.tags, strings.tagList);
+        populateFilterContainer(divPriceFilter, prices, strings.price);
+        populateFilterContainer(divColourFilter, Object.values(productColours), strings.productColours);
 
     })});
 }
-
-// function addFilterCheckboxEventListener(checkbox, searchKey, value, checked) {
-//     checkbox.addEventListener('change', function() {
-//         checkedBoxesCount = countCheckedBoxes();
-//         if (Object.values(checkedBoxesCount).sum() === 1) {
-//             changeDisplayOfAllProductCards(strings.none);
-//         }
-
-//         filterProducts(searchKey, value, checked);
-//         showOrHideFilteredProductCards();
-
-//         if (Object.values(checkedBoxesCount).sum() === 0) {
-//             changeDisplayOfAllProductCards(strings.productCardDisplay);
-//         }
-//     })
-
-//     return checkbox;
-// }
-
 
 // *** DOM FUNCTIONS ***
 
@@ -479,9 +461,6 @@ function addAddToCartEventListeners() {
                 // if not in cart, post new product
                 postProductToCart(productId, colour);
             }
-
-            // update cartProducts again
-            await fetchCartProducts();
         });
     })
 }
@@ -569,21 +548,21 @@ function createCheckBoxAndLabel(value, labelText, searchKey) {
     }
 
     // add checkbox event listener
-    // checkbox.addEventListener('change', function() {
-    //     checkedBoxesCount = countCheckedBoxes();
-    //     if (Object.values(checkedBoxesCount).sum() === 1) {
-    //         changeDisplayOfAllProductCards(strings.none);
-    //     }
+    checkbox.addEventListener('change', function() {
+        checkedBoxesCount = countCheckedBoxes();
+        if (Object.values(checkedBoxesCount).sum() === 1) {
+            changeDisplayOfAllProductCards(strings.none);
+        }
 
-    //     filterProducts(searchKey, value, this.checked);
-    //     showOrHideFilteredProductCards();
+        filterProducts(searchKey, value, this.checked);
+        showOrHideFilteredProductCards();
 
-    //     if (Object.values(checkedBoxesCount).sum() === 0) {
-    //         changeDisplayOfAllProductCards(strings.productCardDisplay);
-    //     }
-    // })
+        if (Object.values(checkedBoxesCount).sum() === 0) {
+            changeDisplayOfAllProductCards(strings.productCardDisplay);
+        }
+    })
 
-    checkbox = addFilterCheckboxEventListener(checkbox, searchKey, value, this.checked);
+    //checkbox = addFilterCheckboxEventListener(checkbox, searchKey, value, this.checked);
 
     // create label
     const label = document.createElement("label");
@@ -602,16 +581,12 @@ function createCheckBoxAndLabel(value, labelText, searchKey) {
 
 }
 
-function populateFilterContainer(filterContainer, filterValues, title, key) {
+function populateFilterContainer(filterContainer, filterValues, key) {
     // filterContainer: element to which to append children, array: array of filter values
     // populate the filter container with filter checkboxes and labels
     // return: none
 
     removeAllChildElements(filterContainer);
-
-    const h2 = document.createElement("h2");
-    h2.textContent = title.toTitleCase();
-    filterContainer.appendChild(h2);
 
     // create and append filter checkboxes and labels
     
@@ -880,11 +855,11 @@ function determineColourRange(hex) {
 
 function test(){
     const filterLists = getFilterLists(testValues);
-    populateFilterContainer(divBrandFilter, filterLists.brands, "brands", strings.brand);
-    populateFilterContainer(divTagFilter, filterLists.tags, "tags", strings.tagList);
+    populateFilterContainer(divBrandFilter, filterLists.brands, strings.brand);
+    populateFilterContainer(divTagFilter, filterLists.tags, strings.tagList);
     populateProductContainer(testValues);
-    populateFilterContainer(divPriceFilter, prices, "price", strings.price);
-    populateFilterContainer(divColourFilter, Object.values(productColours), "colours", strings.productColours);
+    populateFilterContainer(divPriceFilter, prices, strings.price);
+    populateFilterContainer(divColourFilter, Object.values(productColours), strings.productColours);
 
 }
 

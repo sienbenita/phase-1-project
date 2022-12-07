@@ -15,16 +15,27 @@
             <button id="search-button"><img src="./images/icons8-search-30.svg"></button>
         </div>
         <div id="cart-container">
-            <button id="cart-button"><img src="./images/shopping-bag.png"></button>
-            <div class="cart-dropdown-content">
-              <p>lll</p>
+            <div class="dropdown-container">
+                <button id="cart-button"><img src="./images/shopping-bag.png"></button>
+                <div class="dropdown-content cart-dropdown-content">
+                    <div>
+                        <h1>Brand</h1>
+                        <p>Name</p>
+                    </div>
+                    <div>
+                        Quantity
+                    </div>
+                    <div>
+                        <button>X</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <div id="navbar">
-        <div class="nav-dropdown-container">
+        <div class="dropdown-container">
             <button class="nav-button">Face</button>
-            <div class="nav-dropdown-content">
+            <div class="dropdown-content nav-dropdown-content">
               <button class="category-selector" value="foundation">Foundation</button>
               <button class="category-selector" value="concealer">Concealer</button>
               <button class="category-selector" value="contour">Contour</button>
@@ -33,27 +44,27 @@
               <button class="category-selector" value="blush">Blush</button>
             </div>
         </div>
-        <div class="nav-dropdown-container">
+        <div class="dropdown-container">
             <button class="nav-button">Lips</button>
-            <div class="nav-dropdown-content">
+            <div class="dropdown-content nav-dropdown-content">
                 <button class="category-selector" value="lipstick">Lipstick</button>
                 <button class="category-selector" value="lip_liner">Lip Liner</button>
                 <button class="category-selector" value="lip_gloss">Lip Gloss</button>
                 <button class="category-selector" value="lip_stain">Lip Stain</button>
             </div>
         </div>
-        <div class="nav-dropdown-container">
+        <div class="dropdown-container">
             <button class="nav-button">Eyes</button>
-            <div class="nav-dropdown-content">
+            <div class="dropdown-content nav-dropdown-content">
                 <button class="category-selector" value="eyeshadow">Eyeshadow</button>
                 <button class="category-selector" value="eyeliner">Eyeliner</button>
                 <button class="category-selector" value="mascara">Mascara</button>
                 <button class="category-selector" value="eyebrow">Eyebrow</button>
             </div>
         </div>
-        <div class="nav-dropdown-container">
+        <div class="dropdown-container">
             <button class="nav-button">Nails</button>
-            <div class="nav-dropdown-content">
+            <div class="dropdown-content nav-dropdown-content">
                 <button class="category-selector" value="nail_polish">Nail Polish</button>
             </div>
         </div>
@@ -62,25 +73,33 @@
     <div id="title-strip"><h1>Lipstick</h1></div>
     <div id="content">
         <div id="filter-container">
-            <div class="filter" id="brand-filter">
+            <h1>Filter By</h1>
+            <div class="filter">
                 <h2>Brand</h2>
+                <div class="filter-checkbox-container" id="brand-filter">
+                </div>
             </div>
-            <div class="filter" id="tag-filter">
+            <div class="filter">
                 <h2>Tags</h2>
+                <div class="filter-checkbox-container" id="tag-filter">
+                </div>
             </div>
-            <div class="filter" id="colour-filter">
+            <div class="filter">
                 <h2>Colour</h2>
-                <input type="checkbox" name="c1" value="red">
-                <label for="c1">
-                    <svg height="10" width="10">
-                        <circle cx="5" cy="5" r="5" fill="red" />
-                    </svg>
-                    Red
-                </label>
+                <div class="filter-checkbox-container" id="colour-filter">
+                    <input type="checkbox" name="c1" value="red">
+                    <label for="c1">
+                        <svg height="10" width="10">
+                            <circle cx="5" cy="5" r="5" fill="red" />
+                        </svg>
+                        Red
+                    </label>
+                </div>
             </div>
-            <div class="filter last-filter" id="price-filter">
+            <div class="filter">
                 <h2>Price</h2>
-                
+                <div class="filter-checkbox-container last-filter" id="price-filter">
+                </div>
             </div>
         </div>
         <div id="product-container">
