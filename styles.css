@@ -126,8 +126,9 @@ h2 {
 
 
     /* Show the dropdown menu on hover */
-    .dropdown-container:hover .dropdown-content {display: block;}
+    .dropdown-container:hover .nav-dropdown-content {display: block;}
 
+    /* .dropdown-container:hover .cart-dropdown-content {display: block;} */
 #navbar {
     display: flex;
     justify-content: space-between;
@@ -141,7 +142,7 @@ h2 {
         font-size: 1em;
     }
 
-    #cart-button {
+    .icon-button {
         background-color: transparent;
         color: black;
         padding: 16px;
@@ -165,12 +166,50 @@ h2 {
     }
 
     .cart-dropdown-content {
-        width: 300px;
+        width: 400px;
         text-align: left;
         position: absolute;
         right: 15px;
+        
+    }
+
+    .cart-item {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .cart-item-image {
+        width: 10%;
+    }
+
+    .cart-item-image img {
+        width: 100%;
     }
  
+    .cart-item-description {
+        width: 50%;
+    }
+
+    .cart-item-quantity, .cart-item-delete, .cart-item-price {
+        display: flex;
+        align-items: center;
+        padding: 0 5px;
+    }
+
+    .cart-item-quantity .item-quantity-input {
+        width: 100%;
+    }
+
+    .cart-item-price {
+
+        width: 15%;
+        justify-content: end;
+    }
+
+    .cart-item-quantity, .cart-item-delete {
+        width: 10%;
+    }
 
  /* ------------ CONTENT ------------ */
 
@@ -198,9 +237,9 @@ h2 {
         max-width: 220px;
     }
 
-    .filter-checkbox-container {
+    .filter {
         border-top: 1px solid var(--border-grey);
-        padding-bottom: 8px;
+        padding-bottom: 10px;
     }
 
     #price-input-form {

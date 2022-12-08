@@ -78,6 +78,7 @@ const testValues = [
 // strings used throughout the code
 const strings = {
     "productCardDisplay": "flex",
+    "block": "block",
     "none": "none",
     "brand": "brand",
     "tagList": "tag_list",
@@ -255,8 +256,28 @@ function findProductById(id, array) {
     return array.find(p => p.id === id);
 }
 
+// *** QUERY SELECTORS ***
+const divProductContainer = document.querySelector("#product-container");
+const btnsCategorySelector = document.querySelectorAll(".category-selector");
+const divBrandFilter = document.querySelector("#brand-filter");
+const divTagFilter = document.querySelector("#tag-filter");
+const divPriceFilter = document.querySelector("#price-filter");
+const divColourFilter = document.querySelector("#colour-filter");
+const divCartItemsContainer = document.querySelector("#cart-items-container");
+const btnCart = document.querySelector("#cart-button");
+const divCartDropdownContent = document.querySelector(".cart-dropdown-content");
 
-// *** FETCH FUNCTIONS ***
+// *** INIT ***
+function initialisePage() {
+    addCategorySelectorEventListener(btnsCategorySelector);
+    addCartButtonEventListener();
+}
+
+initialisePage();
+
+// *** NAVBAR FUNCTIONS ***
+
+// category selectors
 
 async function fetchProductsByTypeOrCategory (searchTerm) {
     /*
@@ -280,28 +301,6 @@ async function fetchProductsByTypeOrCategory (searchTerm) {
     return products;
 }
 
-async function fetchCartProducts() {
-    /*
-    fetch cart products from the server
-    update cartProducts with the fetched products
-    */
-    const response = await fetch(cartURL);
-    const data = await response.json();
-    cartProducts = data;
-}
-
-// *** QUERY SELECTORS ***
-const divProductContainer = document.querySelector("#product-container");
-const btnsCategorySelector = document.querySelectorAll(".category-selector");
-const divBrandFilter = document.querySelector("#brand-filter");
-const divTagFilter = document.querySelector("#tag-filter");
-const divPriceFilter = document.querySelector("#price-filter");
-const divColourFilter = document.querySelector("#colour-filter");
-
-
-// *** NAVBAR FUNCTIONS ***
-
-// category selectors
 function addCategorySelectorEventListener(buttons) {
     buttons.forEach(cs => {cs.addEventListener("click", async function() {
         // get array of product objects
@@ -428,7 +427,59 @@ function addProductImageErrorListenerToLast(placeholder) {
     productImagesLast.addEventListener("error", () => productImagesLast.src = placeholder);
 }
 
-// *** ADD TO CART FUNCTIONS ***
+// *** CART FUNCTIONS ***
+
+function addCartButtonEventListener() {
+    btnCart.addEventListener("click", function(e) {
+        removeAllChildElements(divCartItemsContainer);
+        divCartDropdownContent.style.display = strings.block;
+        populateCart();
+    });
+}
+
+async function fetchCartProducts() {
+    /*
+    fetch cart products from the server
+    update cartProducts with the fetched products
+    */
+    const response = await fetch(cartURL);
+    const data = await response.json();
+    cartProducts = data;
+}
+
+async function populateCart() {
+    await fetchCartProducts();
+    cartProducts.forEach(item => {
+        const cartItem = generateCartItem(item);
+        divCartItemsContainer.appendChild(cartItem);
+    })
+}
+
+function generateCartItem(item) {
+    const cartItem = document.createElement("div");
+    cartItem.classList.add("cart-item");
+    cartItem.innerHTML = `
+        <div class="cart-item">
+            <div class="cart-item-image">
+                <img src="${item.product.image_link}">
+            </div>
+            <div class="cart-item-description">
+                <h1>${item.product.brand}</h1>
+                <p>${item.product.name}</p>
+            </div>
+            <div class="cart-item-quantity">
+                <input type="number" class="item-quantity-input" name="${item.id}-quantity" value="${item.quantity}">
+            </div>
+            <div class="cart-item-price">
+                <p>$${item.product.price}</p>
+            </div>
+            <div class="cart-item-delete">
+                <button class="icon-button">X</button>
+            </div>
+        </div>
+    `;
+    return cartItem;
+}
 
 function addAddToCartEventListeners() {
     /*
@@ -863,6 +914,6 @@ function test(){
 
 }
 
-addCategorySelectorEventListener(btnsCategorySelector);
+
 
 test();

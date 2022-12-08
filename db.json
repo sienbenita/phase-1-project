@@ -76,6 +76,52 @@
       },
       "selectedColour": "27 Kisses",
       "quantity": 18
+    },
+    {
+      "id": "UncleDaniel'sDankestGoalDigger",
+      "product": {
+        "brand": "Uncle Daniel's",
+        "image_link": "./images/cosmetics.png",
+        "name": "Dankest",
+        "price": "50.00",
+        "tag_list": [
+          "full gmo",
+          "beautiful"
+        ],
+        "product_colors": [
+          {
+            "hex_value": "#B97271",
+            "colour_name": "Goal Digger"
+          }
+        ]
+      },
+      "selectedColour": "Goal Digger",
+      "quantity": 1
+    },
+    {
+      "id": "UncleDaniel'sMoistestFair05",
+      "product": {
+        "brand": "Uncle Daniel's",
+        "image_link": "./images/cosmetics.png",
+        "name": "Moistest",
+        "price": "10.00",
+        "tag_list": [
+          "amazing",
+          "noice"
+        ],
+        "product_colors": [
+          {
+            "hex_value": "#F2DEC3",
+            "colour_name": "Fair 05"
+          },
+          {
+            "hex_value": "#793C36",
+            "colour_name": "Ziggie"
+          }
+        ]
+      },
+      "selectedColour": "Fair 05",
+      "quantity": 2
     }
   ]
 }
