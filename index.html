@@ -18,6 +18,10 @@
             <div class="dropdown-container">
                 <button class="icon-button" id="cart-button"><img src="./images/shopping-bag.png"></button>
                 <div class="dropdown-content cart-dropdown-content">
+                    <div id="cart-info">
+                        <h2 id="cart-item-count">Items: </h2>
+                        <h2 id="cart-subtotal">Subtotal: </h2>
+                    </div>
                     <div id="cart-items-container">
                         <div class="cart-item">
                             <div class="cart-item-image">
@@ -34,17 +38,21 @@
                                 <p>$3.50</p>
                             </div>
                             <div class="cart-item-delete">
-                                <button class="icon-button">X</button>
+                                <button class="icon-button"><img src="./images/close.png"></button>
                             </div>
                         </div>
                     </div>
+                    <button id="checkout-button">PROCEED TO BAG 
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>                        </svg>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
     <div id="navbar">
         <div class="dropdown-container">
-            <button class="nav-button">Face</button>
+            <button class="nav-button" value="face">Face</button>
             <div class="dropdown-content nav-dropdown-content">
               <button class="category-selector" value="foundation">Foundation</button>
               <button class="category-selector" value="concealer">Concealer</button>
@@ -55,7 +63,7 @@
             </div>
         </div>
         <div class="dropdown-container">
-            <button class="nav-button">Lips</button>
+            <button class="nav-button" value="lips">Lips</button>
             <div class="dropdown-content nav-dropdown-content">
                 <button class="category-selector" value="lipstick">Lipstick</button>
                 <button class="category-selector" value="lip_liner">Lip Liner</button>
@@ -64,7 +72,7 @@
             </div>
         </div>
         <div class="dropdown-container">
-            <button class="nav-button">Eyes</button>
+            <button class="nav-button" value="eyes">Eyes</button>
             <div class="dropdown-content nav-dropdown-content">
                 <button class="category-selector" value="eyeshadow">Eyeshadow</button>
                 <button class="category-selector" value="eyeliner">Eyeliner</button>
@@ -73,7 +81,7 @@
             </div>
         </div>
         <div class="dropdown-container">
-            <button class="nav-button">Nails</button>
+            <button class="nav-button" value="nails">Nails</button>
             <div class="dropdown-content nav-dropdown-content">
                 <button class="category-selector" value="nail_polish">Nail Polish</button>
             </div>

@@ -24,21 +24,21 @@ class Colour {
 const allProductTypes = ["blush", "bronzer", "eyebrow", "eyeliner", "eyeshadow", "foundation", "lip_liner", "lipstick", "mascara", "nail_polish"]
 const prices = ["0", "10", "20", "30"];
 const productColours = {
-    "red": new Colour("red", "#f2190a"),
-    "maroon": new Colour("maroon", "#4d0803"),
-    "orange": new Colour("orange", "#fa7305"),
-    "yellow": new Colour("yellow", "#ffc400"),
-    "green": new Colour("green", "#65ad2a"),
-    "blue": new Colour("blue", "#199ef7"),
-    "purple": new Colour("purple", "#7d49d6"),
-    "pink": new Colour("pink", "#f266ee"),
-    "grey": new Colour("grey", "#666666"),
-    "black": new Colour("black", "#080808"),
-    "white": new Colour("white", "#f2f2f2"),
-    "beige": new Colour("beige", "#ffeed9"),
-    "tan": new Colour("tan", "#cca370"),
-    "mediumBrown" : new Colour("medium brown", "#946e40"),
-    "darkBrown": new Colour("dark brown", "#291b0a"),
+    red: new Colour("red", "#f2190a"),
+    maroon: new Colour("maroon", "#4d0803"),
+    orange: new Colour("orange", "#fa7305"),
+    yellow: new Colour("yellow", "#ffc400"),
+    green: new Colour("green", "#65ad2a"),
+    blue: new Colour("blue", "#199ef7"),
+    purple: new Colour("purple", "#7d49d6"),
+    pink: new Colour("pink", "#f266ee"),
+    grey: new Colour("grey", "#666666"),
+    black: new Colour("black", "#080808"),
+    white: new Colour("white", "#f2f2f2"),
+    beige: new Colour("beige", "#ffeed9"),
+    tan: new Colour("tan", "#cca370"),
+    mediumBrown : new Colour("medium brown", "#946e40"),
+    darkBrown: new Colour("dark brown", "#291b0a"),
 }
 
 const placeholderProductValues = {
@@ -48,42 +48,17 @@ const placeholderProductValues = {
     price: "0.00"
 }
 
-const testValues = [
-    {
-        brand: "Uncle Joe's",
-        image_link: "./images/cosmetics.png",
-        name: "Freshest",
-        price: "0.00",
-        tag_list: ["vegan", "amazing"],
-        product_colors: [{"hex_value":"#7C524F","colour_name":"27 Kisses"},{"hex_value":"#884955","colour_name":"Amalia"},{"hex_value":"#9F3D2A","colour_name":"Bitter Sweet"},{"hex_value":"#542A26","colour_name":"Dirty Diana"},{"hex_value":"#793D48","colour_name":"Dreamtime"},{"hex_value":"#BB6E60","colour_name":"Fairy Tale"},{"hex_value":"#BA8285","colour_name":"Halo"},{"hex_value":"#71474E","colour_name":"Just Like Jade"},{"hex_value":"#AF8475","colour_name":"Naked"},{"hex_value":"#D65572","colour_name":"Precious"},{"hex_value":"#8F1A23","colour_name":"Revenge"},{"hex_value":"#8B383D","colour_name":"Ruby Rose"},{"hex_value":"#C83752","colour_name":"Survivor"},{"hex_value":"#784F5F","colour_name":"Viva"},{"hex_value":"#672F57","colour_name":"Zo Zo"}]
-    }, 
-    {
-        brand: "Uncle Daniel's",
-        image_link: "./images/cosmetics.png",
-        name: "Dankest",
-        price: "50.00",
-        tag_list: ["full gmo", "beautiful"],
-        product_colors: [{"hex_value":"#B97271","colour_name":"Goal Digger"}]
-    },
-    {
-        brand: "Uncle Daniel's",
-        image_link: "./images/cosmetics.png",
-        name: "Moistest",
-        price: "10.00",
-        tag_list: ["amazing", "noice"],
-        product_colors: [{"hex_value":"#F2DEC3","colour_name":"Fair 05"},{"hex_value":"#793C36","colour_name":"Ziggie"}]
-    }
-]
+const testValues = JSON.parse(`[{"id":1035,"brand":"rejuva minerals","name":"Multi Purpose Powder - Blush \u0026 Eye","price":"5.5","price_sign":"$","currency":"USD","image_link":"https://www.purpicks.com/wp-content/uploads/2018/06/Rejuva-Minerals-Multi-Purpose-Powder-Blush-_-Eye-1.jpg","product_link":"https://www.purpicks.com/product/rejuva-minerals-multi-purpose-powder-blush-eye/","website_link":"https://purpicks.com/","description":"Our Multi Purpose Pressed Powders may be used for blush or eye shadow. Blended with antioxidants from Certified Organic Fruits, Berries \u0026amp; Botanicals*. Made without any gluten containing ingredients. Mica free Pink Parfait and Papaya will offer a natural, ultra sheer semi-matte finish. The petals from beautiful crushed red roses that are found in Pink Parfait, are valued for their natural color and delightful aroma that they provide! Acai Berry will offer a natural, ultra sheer satin finish (mica added). VEGAN. Image one is Pink Parfait. Image two is Papaya, and image three is Acai Berry. Model in image four is wearing Papaya. Model in image five is wearing Acai Berry. To see a demonstration of Papaya, click on the video and fast forward to 3:44. Enjoy! This product is EWG VERIFIED\u0026#x2122; and rated 'CLEAN'in the Think Dirty app! BPA and Phthalate free packaging. Plastic parts of compacts are recyclable. *Tiny flecks of fruit and botanical particles may be visible in powder. Pink Parfait and Papaya are Titanium Dioxide and Mica free. Net Weight: 2.8 gm.","rating":null,"category":"powder","product_type":"blush","tag_list":["purpicks","EWG Verified","Hypoallergenic","No Talc"],"created_at":"2018-06-30T19:19:31.909Z","updated_at":"2018-09-02T22:52:06.855Z","product_api_url":"https://makeup-api.herokuapp.com/api/v1/products/1035.json","api_featured_image":"//s3.amazonaws.com/donovanbailey/products/api_featured_images/000/001/035/original/open-uri20180630-4-n6wb0y?1530390383","product_colors":[{"hex_value":"#E1BFC0","colour_name":"Pink Parfait"},{"hex_value":"#D7A7A3","colour_name":"Papaya"},{"hex_value":"#E6C3CB","colour_name":"Acai Berry"}]}]`)
 
 // strings used throughout the code
 const strings = {
-    "productCardDisplay": "flex",
-    "block": "block",
-    "none": "none",
-    "brand": "brand",
-    "tagList": "tag_list",
-    "productColours": "product_colors",
-    "price": "price"
+    productCardDisplay: "flex",
+    block: "block",
+    none: "none",
+    brand: "brand",
+    tagList: "tag_list",
+    productColours: "product_colors",
+    price: "price"
 }
 
 // html classnames
@@ -92,6 +67,13 @@ const classNames = {
     tagCheckbox: "tag-checkbox",
     priceCheckbox: "price-checkbox",
     colourCheckbox: "colour-checkbox",
+}
+
+const categoryColours = {
+    face: "#7F5649",
+    lips: "#DC94B7",
+    eyes: "#7A9B76",
+    nails: "#264653"
 }
 
 let loadedProducts = [];    // all productObjects that are loaded on the page
@@ -104,9 +86,8 @@ const cartURL = "http://localhost:3000/cart_products";
 
 String.prototype.toTitleCase = function () {
     // convert string to title case
-
     // lowercase the string and split it into words
-    const split = this.toLowerCase().split(" ");
+    const split = this.toLowerCase().trim().split(/\s+/);
     return split.reduce((p, c) => {
         // previous word + space + first letter of current word capitalised + rest of current word
         return (p + " " + c[0].toUpperCase() + c.substring(1)).trim();
@@ -220,6 +201,14 @@ function addToLoadedProducts(id, card, product) {
     loadedProducts.push(new ProductObject(id, card, product, false, 0, false, 0));
 }
 
+function sumProductPrices(products) {
+    return products.reduce((a, c) => {return a + c.product.price * c.quantity;}, 0)
+}
+
+function sumProductQuanities(products) {
+    return products.reduce((a, c) => {return a + c.quantity}, 0)
+}
+
 function svgCircle(fillColour) {
     /*
     fillColour: string hexcode
@@ -237,7 +226,7 @@ function generateProductId(product) {
     product: object containing brand and name
     return: string id based on brand and name
     */
-    return (product.brand + product.name).replace(/\s+/g, '');
+    return (product.brand + product.name).replace(/\s+/g, '').replace(/^[a-z0-9]+$/i, '');
 }
 
 function generateProductColourId(productId, colour) {
@@ -257,19 +246,28 @@ function findProductById(id, array) {
 }
 
 // *** QUERY SELECTORS ***
-const divProductContainer = document.querySelector("#product-container");
-const btnsCategorySelector = document.querySelectorAll(".category-selector");
-const divBrandFilter = document.querySelector("#brand-filter");
-const divTagFilter = document.querySelector("#tag-filter");
-const divPriceFilter = document.querySelector("#price-filter");
-const divColourFilter = document.querySelector("#colour-filter");
-const divCartItemsContainer = document.querySelector("#cart-items-container");
-const btnCart = document.querySelector("#cart-button");
-const divCartDropdownContent = document.querySelector(".cart-dropdown-content");
+// navbar
+const categorySelectors = document.querySelectorAll(".category-selector");
+// content
+const productContainer = document.querySelector("#product-container");
+const titleStrip = document.querySelector("#title-strip");
+// filters
+const brandFilter = document.querySelector("#brand-filter");
+const tagFilter = document.querySelector("#tag-filter");
+const priceFilter = document.querySelector("#price-filter");
+const colourFilter = document.querySelector("#colour-filter");
+// cart
+const cartItemsContainer = document.querySelector("#cart-items-container");
+const cartButton = document.querySelector("#cart-button");
+const cartDropdownContent = document.querySelector(".cart-dropdown-content");
+const cartItemCount = document.querySelector("#cart-item-count");
+const cartSubtotal = document.querySelector("#cart-subtotal");
+const checkoutButton = document.querySelector("#checkout-button");
+
 
 // *** INIT ***
 function initialisePage() {
-    addCategorySelectorEventListener(btnsCategorySelector);
+    addCategorySelectorEventListener(categorySelectors);
     addCartButtonEventListener();
 }
 
@@ -303,17 +301,18 @@ async function fetchProductsByTypeOrCategory (searchTerm) {
 
 function addCategorySelectorEventListener(buttons) {
     buttons.forEach(cs => {cs.addEventListener("click", async function() {
+        titleStrip.style.backgroundColor = categoryColours[cs.parentNode.parentNode.querySelector(".nav-button").value]
+        titleStrip.childNodes[0].textContent = cs.textContent;
         // get array of product objects
         const products = await fetchProductsByTypeOrCategory(cs.value)
         // create and add product cards
         populateProductContainer(products);
-
         // populate filters
         const filterLists = getFilterLists(products);
-        populateFilterContainer(divBrandFilter, filterLists.brands, strings.brand);
-        populateFilterContainer(divTagFilter, filterLists.tags, strings.tagList);
-        populateFilterContainer(divPriceFilter, prices, strings.price);
-        populateFilterContainer(divColourFilter, Object.values(productColours), strings.productColours);
+        populateFilterContainer(brandFilter, filterLists.brands, strings.brand);
+        populateFilterContainer(tagFilter, filterLists.tags, strings.tagList);
+        populateFilterContainer(priceFilter, prices, strings.price);
+        populateFilterContainer(colourFilter, Object.values(productColours), strings.productColours);
 
     })});
 }
@@ -353,21 +352,19 @@ function populateProductContainer(products) {
 
     // remove all cards on page
     loadedProducts = [];
-    removeAllChildElements(divProductContainer);
+    removeAllChildElements(productContainer);
 
     // create and append cards
     products.forEach(product => {
         const id = generateProductId(product);
         const card = createProductCard(id, product.image_link, product.brand, product.name, product.price, product.product_colors);
-        divProductContainer.appendChild(card);
+        productContainer.appendChild(card);
         
-        addProductImageErrorListenerToLast(placeholderProductValues.image_link);
+        //addProductImageErrorListenerToLast(placeholderProductValues.image_link);
         
         addToLoadedProducts(id, card, product);
     })
     
-    // add event listeners to the generated 'add to cart' buttons
-    addAddToCartEventListeners();
 }
 
 function createProductCard(id, image, brand, name, price, colours) {
@@ -379,12 +376,43 @@ function createProductCard(id, image, brand, name, price, colours) {
     const card = document.createElement("div");
     card.classList.add("product-card");
     card.innerHTML = `
-        <img class="product-image" src="${image}">
+        <img class="product-image" src="${image}" onerror="this.onerror=null; this.src='${placeholderProductValues.image_link}'">
         <span class="product-brand">${brand ? brand.toUpperCase() : placeholderProductValues.brand}</span>
         <span class="product-name">${name}</span>
         <span class="product-price">$${price}</span>
-        ${colours.length > 0 ? createColourSelect(id, colours) : `<button class="add-to-cart-button">ADD TO BAG</button>`}
     `
+        //${colours.length > 0 ? createColourSelect(id, colours) : `<button class="add-to-cart-button">ADD TO BAG</button>`}
+    if (colours.length) {
+        card.appendChild(createColourSelect(id, colours));
+    } else {
+        const addToCartButton = document.createElement("button");
+        addToCartButton.classList.add("add-to-cart-button");
+        addToCartButton.textContent = "ADD TO BAG";
+        card.appendChild(addToCartButton);
+    }
+    const btn = card.querySelector(".add-to-cart-button");
+    btn.addEventListener('click', async function (e) {
+
+        // update cartProducts
+        await fetchCartProducts();
+
+        // initialise values
+        const colourSelect = btn.parentNode.querySelector(".colour-select");
+        const colour = colourSelect.options[colourSelect.selectedIndex].text;
+        const productId = btn.value;
+        const productColourId = generateProductColourId(productId, colour);
+        const productInCart = findProductById(productColourId, cartProducts);
+        
+        if (productInCart) {
+            // if product is already in cart, patch quantity
+            productInCart.quantity++
+            await patchProductQuantityInCart(productInCart);
+        } else {
+            // if not in cart, post new product
+            await postProductToCart(productId, colour);
+        }
+        await populateCart();
+    })
     return card;
 }
 
@@ -394,12 +422,13 @@ function createColourSelect(id, colours) {
     return: string html of a form containing a dropdown with an 'add to cart' button
     */
 
-    // form and select declaration
+    const dropdownBagContainer = document.createElement("div");
+    dropdownBagContainer.classList.add("dropdown-bag-container");
+
+    // div and select declaration
     let html = `
-        <form class="dropdown-bag-container">
         <select name="colour-select" class="colour-select">
     `;
-
     // add all of the colour options
     colours.forEach(c => {
         html += `<option value="${c.colour_name.toLowerCase()}"> ${c.colour_name.toTitleCase()}</option>`
@@ -408,33 +437,55 @@ function createColourSelect(id, colours) {
     // button declaration
     html += `
         </select>
-        <button type="submit" value="${id}" class="add-to-cart-button icon-add-to-cart-button"><img src="./images/shopping-bag.png"></button>
-        </form>
-    `;
+        `;
+        //<button value="${id}" class="add-to-cart-button icon-add-to-cart-button"><img src="./images/shopping-bag.png"></button>
 
-    return html;
-}
+    const addToCartButton = document.createElement("button");
+    addToCartButton.value = id;
+    addToCartButton.classList.add("add-to-cart-button", "icon-add-to-cart-button")
+    addToCartButton.innerHTML = `<img src="./images/shopping-bag.png">
+    `
 
-function addProductImageErrorListenerToLast(placeholder) {
-    /*
-    placeholder: string image url
-    add an event listener to the last product image
-    if there is an error retrieving the image, use the placeholder image instead
-    return: none
-    */
-    const productImages = document.querySelectorAll(".product-image");
-    const productImagesLast = productImages[productImages.length - 1];
-    productImagesLast.addEventListener("error", () => productImagesLast.src = placeholder);
+    dropdownBagContainer.innerHTML = html;
+    dropdownBagContainer.appendChild(addToCartButton);
+    return dropdownBagContainer;
 }
 
 // *** CART FUNCTIONS ***
 
 function addCartButtonEventListener() {
-    btnCart.addEventListener("click", function(e) {
-        removeAllChildElements(divCartItemsContainer);
-        divCartDropdownContent.style.display = strings.block;
-        populateCart();
+    cartButton.addEventListener("click", function(e) {
+        changeCartDisplay();
     });
+}
+
+function changeCartDisplay() {
+    const display = cartDropdownContent.style.display;
+        if (!display || display === strings.none) {
+            cartDropdownContent.style.display = strings.block;
+            populateCart();
+            document.addEventListener('click', e => {
+                let targetElement = e.target;
+                do {
+                    if(targetElement === cartDropdownContent || targetElement === cartButton) {
+                      // This is a click inside, does nothing, just return.
+                      return;
+                    }
+                    // Go up the DOM
+                    targetElement = targetElement.parentNode;
+                  } while (targetElement);
+                  // This is a click outside.      
+                  cartDropdownContent.style.display = strings.none;
+                });
+            
+        } else {
+            cartDropdownContent.style.display = strings.none;
+            document.removeEventListener('click', e => {
+                if (e.target !== cartDropdownContent) {
+                    cartDropdownContent.style.display = strings.none;
+                }
+            })
+        }
 }
 
 async function fetchCartProducts() {
@@ -448,10 +499,25 @@ async function fetchCartProducts() {
 }
 
 async function populateCart() {
+    removeAllChildElements(cartItemsContainer);
     await fetchCartProducts();
     cartProducts.forEach(item => {
         const cartItem = generateCartItem(item);
-        divCartItemsContainer.appendChild(cartItem);
+        cartItemsContainer.appendChild(cartItem);
+    })
+    cartItemCount.textContent = `Items in bag: ${sumProductQuanities(cartProducts)}`;
+    cartSubtotal.textContent = `Subtotal: $${sumProductPrices(cartProducts)}`;
+
+    addDeleteItemEventListeners();
+}
+
+function addDeleteItemEventListeners() {
+    const btnsDeleteItem = cartItemsContainer.querySelectorAll(".delete-item-button");
+    btnsDeleteItem.forEach(btn => {
+        btn.addEventListener("click", async function() {
+            await deleteItemFromCart(btn.value);
+            populateCart();
+        })
     })
 }
 
@@ -464,17 +530,18 @@ function generateCartItem(item) {
                 <img src="${item.product.image_link}">
             </div>
             <div class="cart-item-description">
-                <h1>${item.product.brand}</h1>
-                <p>${item.product.name}</p>
+                <h1>${item.product.brand.toUpperCase()} ${item.product.name}</h1>
+                
+                <p>Colour: ${item.selectedColour}</p>
             </div>
             <div class="cart-item-quantity">
-                <input type="number" class="item-quantity-input" name="${item.id}-quantity" value="${item.quantity}">
+                <input type="number" class="item-quantity-input" name="${item.id}-quantity" value="${item.quantity}" readonly>
             </div>
             <div class="cart-item-price">
-                <p>$${item.product.price}</p>
+                <p>$${item.product.price*item.quantity}</p>
             </div>
             <div class="cart-item-delete">
-                <button class="icon-button">X</button>
+                <button class="delete-item-button icon-button" value="${item.id}"><img src="./images/close.png"></button>
             </div>
         </div>
     `;
@@ -487,12 +554,11 @@ function addAddToCartEventListeners() {
     */
 
     // find all of the 'add to cart' buttons
-    const btnsAddToCart = document.querySelectorAll(".add-to-cart-button");
+    const btnsAddToCart = productContainer.querySelectorAll(".add-to-cart-button");
     
     // add event listeners to each
     btnsAddToCart.forEach(btn => {
         btn.addEventListener("click", async function (e) {
-            e.preventDefault();
 
             // update cartProducts
             await fetchCartProducts();
@@ -507,16 +573,17 @@ function addAddToCartEventListeners() {
             if (productInCart) {
                 // if product is already in cart, patch quantity
                 productInCart.quantity++
-                patchProductQuantityInCart(productInCart);
+                await patchProductQuantityInCart(productInCart);
             } else {
                 // if not in cart, post new product
-                postProductToCart(productId, colour);
+                await postProductToCart(productId, colour);
             }
+            await populateCart();
         });
     })
 }
 
-function postProductToCart(productId, colour) {
+async function postProductToCart(productId, colour) {
     /*
     productId: string, colour: string
     send post request to add a product matching productId to cart
@@ -538,13 +605,11 @@ function postProductToCart(productId, colour) {
     }
 
     // send request
-    fetch(cartURL, configurationObject)
-    .then(function (response) {
-        return response.json();
-      })
+    await fetch(cartURL, configurationObject);
+
 }
 
-function patchProductQuantityInCart(productInCart) {
+async function patchProductQuantityInCart(productInCart) {
     /*
     productInCart: product object with edited quantity
     send patch request to update quantity
@@ -563,10 +628,22 @@ function patchProductQuantityInCart(productInCart) {
     }
 
     // send request
-    fetch(`${cartURL}/${productInCart.id}`, configurationObject)
-    .then(function (response) {
-        return response.json();
-      })
+    await fetch(`${cartURL}/${productInCart.id}`, configurationObject);
+
+}
+
+async function deleteItemFromCart(productId) {
+    // configure request
+    const configurationObject = {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+        }
+    }
+
+    // send request
+    await fetch(`${cartURL}/${productId}`, configurationObject);
 }
 
 // *** CREATE FILTERS ***
@@ -612,8 +689,6 @@ function createCheckBoxAndLabel(value, labelText, searchKey) {
             changeDisplayOfAllProductCards(strings.productCardDisplay);
         }
     })
-
-    //checkbox = addFilterCheckboxEventListener(checkbox, searchKey, value, this.checked);
 
     // create label
     const label = document.createElement("label");
@@ -734,7 +809,7 @@ function filterProducts(key, value, checked) {
     
     // determine which loaded products match the search value
     loadedProducts.forEach(productObject => {
-        const productValue = productObject.product[key];
+        let productValue = productObject.product[key];
         switch (key){   // change search conditions based on the key being searched on
             case strings.brand:
                 // simple evaluation of matching brand names
@@ -750,6 +825,9 @@ function filterProducts(key, value, checked) {
                 break;
             case strings.productColours:
                 // check if any colour in the colour list meets the value
+                if (productValue.length === 1){
+                    productValue = productValue.split(",");
+                }
                 productValue.forEach(c => {
                     const hexCode = c.hex_value;
                     const colour = determineColourRange(hexCode);
@@ -906,11 +984,11 @@ function determineColourRange(hex) {
 
 function test(){
     const filterLists = getFilterLists(testValues);
-    populateFilterContainer(divBrandFilter, filterLists.brands, strings.brand);
-    populateFilterContainer(divTagFilter, filterLists.tags, strings.tagList);
+    populateFilterContainer(brandFilter, filterLists.brands, strings.brand);
+    populateFilterContainer(tagFilter, filterLists.tags, strings.tagList);
     populateProductContainer(testValues);
-    populateFilterContainer(divPriceFilter, prices, strings.price);
-    populateFilterContainer(divColourFilter, Object.values(productColours), strings.productColours);
+    populateFilterContainer(priceFilter, prices, strings.price);
+    populateFilterContainer(colourFilter, Object.values(productColours), strings.productColours);
 
 }
 
