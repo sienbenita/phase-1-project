@@ -70,10 +70,10 @@ const classNames = {
 }
 
 const categoryColours = {
-    face: "#7F5649",
-    lips: "#DC94B7",
-    eyes: "#7A9B76",
-    nails: "#264653"
+    face: "#7B5136",
+    lips: "#002500",
+    eyes: "#218380",
+    nails: "#255365"
 }
 
 let loadedProducts = [];    // all productObjects that are loaded on the page
@@ -226,7 +226,7 @@ function generateProductId(product) {
     product: object containing brand and name
     return: string id based on brand and name
     */
-    return (product.brand + product.name).replace(/\s+/g, '').replace(/^[a-z0-9]+$/i, '');
+    return (product.brand + product.name).replace(/\s+/g, '').replace(/[^a-z0-9]/gi, '');
 }
 
 function generateProductColourId(productId, colour) {
@@ -301,7 +301,8 @@ async function fetchProductsByTypeOrCategory (searchTerm) {
 
 function addCategorySelectorEventListener(buttons) {
     buttons.forEach(cs => {cs.addEventListener("click", async function() {
-        titleStrip.style.backgroundColor = categoryColours[cs.parentNode.parentNode.querySelector(".nav-button").value]
+        //titleStrip.style.backgroundColor = categoryColours[cs.parentNode.parentNode.querySelector(".nav-button").value]
+        changeTitleStrip(cs.parentNode.parentNode.querySelector(".nav-button").value)
         titleStrip.childNodes[0].textContent = cs.textContent;
         // get array of product objects
         const products = await fetchProductsByTypeOrCategory(cs.value)
@@ -315,6 +316,26 @@ function addCategorySelectorEventListener(buttons) {
         populateFilterContainer(colourFilter, Object.values(productColours), strings.productColours);
 
     })});
+}
+
+function changeTitleStrip(category) {
+    titleStrip.style.backgroundColor = categoryColours[category];
+    let imageLink = "";
+    switch(category) {
+        case "face":
+            imageLink = "./images/foundation-containers-advertising-assortment.jpg";
+            break;
+        case "lips":
+            imageLink = "./images/lip-product-arrangement.jpg";
+            break;
+        case "eyes":
+            imageLink = "./images/eyeshadow.jpg";
+            break;
+        case "nails":
+            imageLink = "./images/high-angle-shot-colorful-nail-polishes-multicolor-paper (1).jpg";
+            break;
+    }
+    titleStrip.style.backgroundImage=`url(${"./images/gplay.png"})`;
 }
 
 // *** DOM FUNCTIONS ***
@@ -825,15 +846,14 @@ function filterProducts(key, value, checked) {
                 break;
             case strings.productColours:
                 // check if any colour in the colour list meets the value
-                if (productValue.length === 1){
-                    productValue = productValue.split(",");
-                }
                 productValue.forEach(c => {
-                    const hexCode = c.hex_value;
-                    const colour = determineColourRange(hexCode);
-                    if (colour.colourName === value.colourName.toLowerCase()) {
-                        changeCriteriaMet(productObject, checked, strings.productColours);
-                    }
+                    const hexCode = c.hex_value.split(",");
+                    hexCode.forEach(hc => {
+                        const colour = determineColourRange(hc);
+                        if (colour.colourName === value.colourName.toLowerCase()) {
+                            changeCriteriaMet(productObject, checked, strings.productColours);
+                        }
+                    })
                 })
                 break;
             case strings.price:

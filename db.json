@@ -1,7 +1,7 @@
 {
   "cart_products": [
     {
-      "id": "cliniqueWearEverywhereNeutralsAllAboutShadow&trade;8-PanPaletteNudes",
+      "id": "cliniqueWearEverywhereNeutralsAllAboutShadowtrade8PanPaletteGreens",
       "product": {
         "id": 815,
         "brand": "clinique",
@@ -44,7 +44,7 @@
           }
         ]
       },
-      "selectedColour": "Nudes",
+      "selectedColour": "Greens",
       "quantity": 1
     }
   ]
