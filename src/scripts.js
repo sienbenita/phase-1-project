@@ -340,7 +340,7 @@ function addCategorySelectorEventListener(buttons) {
         populateFilterContainer(priceFilter, prices, strings.price);
         populateFilterContainer(colourFilter, Object.values(productColours), strings.productColours);
 
-    })});
+    }, { useCapture: true })});
 }
 
 function changeTitleStrip(category) {
@@ -425,7 +425,7 @@ function populateProductContainer(products) {
         card.addEventListener("click", e => {
             fillProductDetailOverlay(product, card);
             addClickOffEventListener(productDetailOverlay, productDetailOverlay, card);
-        });
+        }, { useCapture: true });
                 
         addToLoadedProducts(id, card, product);
     })
