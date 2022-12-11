@@ -269,13 +269,35 @@ const checkoutButton = document.querySelector("#checkout-button");
 const productDetailOverlay = document.querySelector("#product-detail-overlay");
 const productDetailOverlayAddToCart = productDetailOverlay.querySelector(".add-to-cart-button")
 
+const notDone = document.querySelectorAll(".not-done");
+
 // *** INIT ***
-function initialisePage() {
+async function initialisePage() {
     addCategorySelectorEventListener(categorySelectors);
     addCartButtonEventListener();
+    changeTitleStrip("face");
+    titleStrip.childNodes[0].textContent = "Foundation";
+    // get array of product objects
+    const products = await fetchProductsByTypeOrCategory("foundation")
+    // create and add product cards
+    populateProductContainer(products);
+    // populate filters
+    const filterLists = getFilterLists(products);
+    populateFilterContainer(brandFilter, filterLists.brands, strings.brand);
+    populateFilterContainer(tagFilter, filterLists.tags, strings.tagList);
+    populateFilterContainer(priceFilter, prices, strings.price);
+    populateFilterContainer(colourFilter, Object.values(productColours), strings.productColours);
+
+    notDone.forEach(element => {
+        element.addEventListener("click", event => {
+            alert("Let's call this done")
+        })
+    })
 }
 
 initialisePage();
+
+
 
 // *** NAVBAR FUNCTIONS ***
 
@@ -305,7 +327,6 @@ async function fetchProductsByTypeOrCategory (searchTerm) {
 
 function addCategorySelectorEventListener(buttons) {
     buttons.forEach(cs => {cs.addEventListener("click", async function() {
-        //titleStrip.style.backgroundColor = categoryColours[cs.parentNode.parentNode.querySelector(".nav-button").value]
         changeTitleStrip(cs.parentNode.parentNode.querySelector(".nav-button").value)
         titleStrip.childNodes[0].textContent = cs.textContent;
         // get array of product objects
@@ -379,7 +400,7 @@ function addClickOffEventListener(toggleElement, ...clickExceptions) {
           } while (targetElement);
           // This is a click outside.      
           toggleElement.style.display = strings.none;
-        });
+        }, { useCapture: true });
 }
 
 // *** CREATE PRODUCT CARDS ***
@@ -401,14 +422,17 @@ function populateProductContainer(products) {
         const card = createProductCard(id, product.image_link, product.brand, product.name, product.price, product.product_colors);
         
         productContainer.appendChild(card);
-        card.addEventListener("click", e => fillProductDetailOverlay(product, card));
+        card.addEventListener("click", e => {
+            fillProductDetailOverlay(product, card);
+            addClickOffEventListener(productDetailOverlay, productDetailOverlay, card);
+        });
                 
         addToLoadedProducts(id, card, product);
     })
     
 }
 
-function fillProductDetailOverlay(product, card) {
+function fillProductDetailOverlay(product) {
     productDetailOverlay.style.display = strings.block;
     productDetailOverlay.innerHTML = `
             <div id="back-strip">Back</div>
@@ -427,7 +451,7 @@ function fillProductDetailOverlay(product, card) {
                     <div id="add-to-cart-container">
                         <label for="quantity-input">QTY:</label>
                         <input id="quantity-input" type="number" value="1" name="quantity-input">
-                        <button class="add-to-cart-button">ADD TO BAG</button>
+                        <button class="add-to-cart-button not-done">ADD TO BAG</button>
                     </div>
                     <div id="description-container">
                         <h1>Details</h1>
@@ -436,7 +460,20 @@ function fillProductDetailOverlay(product, card) {
                 </div>
             </div>
     `
-    addClickOffEventListener(productDetailOverlay, productDetailOverlay, card);
+    const shades = productDetailOverlay.querySelector("#shades");
+    product.product_colors.forEach(pc => {
+        const checkbox = document.createElement("input");
+        checkbox.type = "radio";
+        checkbox.value = pc.colourName;
+        const label = document.createElement("label");
+        label.appendChild(checkbox);
+        const circleCheckboxAndLabel = createColourCircleCheckboxAndLabel(checkbox, pc.hex_value, pc.colour_name)
+        const labelTextContent = circleCheckboxAndLabel.labelTextContent
+        
+        label.appendChild(circleCheckboxAndLabel.colourCircle);
+        label.appendChild(labelTextContent)
+        shades.appendChild(label);
+    })
 
 }
 
@@ -537,18 +574,18 @@ function addCartButtonEventListener() {
 
 function changeCartDisplay() {
     const display = cartDropdownContent.style.display;
-        if (!display || display === strings.none) {
-            cartDropdownContent.style.display = strings.block;
-            populateCart();
-            addClickOffEventListener(cartDropdownContent, cartDropdownContent, cartButton);
-        } else {
-            cartDropdownContent.style.display = strings.none;
-            document.removeEventListener('click', e => {
-                if (e.target !== cartDropdownContent) {
-                    cartDropdownContent.style.display = strings.none;
-                }
-            })
-        }
+    if (!display || display === strings.none) {
+        cartDropdownContent.style.display = strings.block;
+        populateCart();
+        addClickOffEventListener(cartDropdownContent, cartDropdownContent, cartButton);
+    } else {
+        cartDropdownContent.style.display = strings.none;
+        document.removeEventListener('click', e => {
+            if (e.target !== cartDropdownContent) {
+                cartDropdownContent.style.display = strings.none;
+            }
+        })
+    }
 }
 
 
@@ -730,31 +767,33 @@ function createCheckBoxAndLabel(value, labelText, searchKey, hexCode="") {
     label.appendChild(checkbox);
     let labelTextContent;
     if (searchKey === strings.productColours) {
-        labelTextContent = document.createElement("div");
-        labelTextContent.classList.add("relative-container");
-        const tooltip = document.createElement("div");
-        tooltip.classList.add("bottom-tooltip");
-        tooltip.innerHTML = searchKey !== strings.productColours || searchKey === strings.brand || labelText === labelText.toLowerCase() ? labelText.toTitleCase() : labelText
-        labelTextContent.appendChild(tooltip);
-        checkbox.classList.add("checkbox-hidden");
-        const colourCircle = svgCircle(hexCode, 12);
-        colourCircle.classList.add("colour-circle");
-        label.appendChild(colourCircle);
+        const circleCheckboxAndLabel = createColourCircleCheckboxAndLabel(checkbox, hexCode, labelText)
+        labelTextContent = circleCheckboxAndLabel.labelTextContent
+        
+        label.appendChild(circleCheckboxAndLabel.colourCircle);
     } else {
         labelTextContent = document.createElement("span");
-        labelTextContent.innerHTML = searchKey !== strings.productColours || searchKey === strings.brand || labelText === labelText.toLowerCase() ? labelText.toTitleCase() : labelText
+        labelTextContent.innerHTML = searchKey === strings.brand || labelText === labelText.toLowerCase() ? labelText.toTitleCase() : labelText
     }
 
     
     label.appendChild(labelTextContent)
     label.for = value;
-    // create container and append checkbox + label
-    // const container = document.createElement("div");
-    // //container.appendChild(checkbox);
-    // container.appendChild(label);
-
     return label;
 
+}
+
+function createColourCircleCheckboxAndLabel(checkbox, hexCode, labelText) {
+    checkbox.classList.add("checkbox-hidden");
+    const labelTextContent = document.createElement("div");
+    labelTextContent.classList.add("relative-container");
+    const tooltip = document.createElement("div");
+    tooltip.classList.add("bottom-tooltip");
+    tooltip.innerHTML = labelText.toTitleCase();
+    labelTextContent.appendChild(tooltip);
+    const colourCircle = svgCircle(hexCode, 12);
+    colourCircle.classList.add("colour-circle");
+    return {colourCircle: colourCircle, labelTextContent: labelTextContent};
 }
 
 function populateFilterContainer(filterContainer, filterValues, key) {
