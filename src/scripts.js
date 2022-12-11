@@ -38,7 +38,7 @@ const productColours = {
     beige: new Colour("beige", "#ffeed9"),
     tan: new Colour("tan", "#cca370"),
     mediumBrown : new Colour("medium brown", "#946e40"),
-    darkBrown: new Colour("dark brown", "#291b0a"),
+    darkBrown: new Colour("dark brown", "#4d361b"),
 }
 
 const placeholderProductValues = {
@@ -70,7 +70,7 @@ const classNames = {
 }
 
 const categoryColours = {
-    face: "#7B5136",
+    face: "#543826",
     lips: "#002500",
     eyes: "#218380",
     nails: "#255365"
@@ -209,16 +209,18 @@ function sumProductQuanities(products) {
     return products.reduce((a, c) => {return a + c.quantity}, 0)
 }
 
-function svgCircle(fillColour) {
+function svgCircle(fillColour, radius) {
     /*
     fillColour: string hexcode
     return: string html for an svg circle with fill=fillColour
     */
-    return `
-        <svg height="10" width="10">
-            <circle cx="5" cy="5" r="5" fill="${fillColour}" />
-        </svg>
-    `
+    const circleContainer = document.createElement("span");
+    circleContainer.innerHTML = `
+    <svg height="${radius*2}" width="${radius*2}">
+        <circle cx="${radius}" cy="${radius}" r="${radius}" fill="${fillColour}" />
+    </svg>
+`
+    return circleContainer;
 }
 
 function generateProductId(product) {
@@ -263,7 +265,9 @@ const cartDropdownContent = document.querySelector(".cart-dropdown-content");
 const cartItemCount = document.querySelector("#cart-item-count");
 const cartSubtotal = document.querySelector("#cart-subtotal");
 const checkoutButton = document.querySelector("#checkout-button");
-
+// product detail overlay
+const productDetailOverlay = document.querySelector("#product-detail-overlay");
+const productDetailOverlayAddToCart = document.querySelector
 
 // *** INIT ***
 function initialisePage() {
@@ -413,26 +417,7 @@ function createProductCard(id, image, brand, name, price, colours) {
     }
     const btn = card.querySelector(".add-to-cart-button");
     btn.addEventListener('click', async function (e) {
-
-        // update cartProducts
-        await fetchCartProducts();
-
-        // initialise values
-        const colourSelect = btn.parentNode.querySelector(".colour-select");
-        const colour = colourSelect.options[colourSelect.selectedIndex].text;
-        const productId = btn.value;
-        const productColourId = generateProductColourId(productId, colour);
-        const productInCart = findProductById(productColourId, cartProducts);
-        
-        if (productInCart) {
-            // if product is already in cart, patch quantity
-            productInCart.quantity++
-            await patchProductQuantityInCart(productInCart);
-        } else {
-            // if not in cart, post new product
-            await postProductToCart(productId, colour);
-        }
-        await populateCart();
+        addAddToCartEventListener(btn, btn.parentNode.querySelector(".colour-select"));
     })
     return card;
 }
@@ -473,6 +458,28 @@ function createColourSelect(id, colours) {
 }
 
 // *** CART FUNCTIONS ***
+
+async function addAddToCartEventListener(button, colourSelect) {
+    // update cartProducts
+    await fetchCartProducts();
+
+    // initialise values
+    //const colourSelect = colourSelectParent.querySelector(".colour-select");
+    const colour = colourSelect.options[colourSelect.selectedIndex].text;
+    const productId = button.value;
+    const productColourId = generateProductColourId(productId, colour);
+    const productInCart = findProductById(productColourId, cartProducts);
+    
+    if (productInCart) {
+        // if product is already in cart, patch quantity
+        productInCart.quantity++
+        await patchProductQuantityInCart(productInCart);
+    } else {
+        // if not in cart, post new product
+        await postProductToCart(productId, colour);
+    }
+    await populateCart();
+}
 
 function addCartButtonEventListener() {
     cartButton.addEventListener("click", function(e) {
@@ -553,7 +560,8 @@ function generateCartItem(item) {
             <div class="cart-item-description">
                 <h1>${item.product.brand.toUpperCase()} ${item.product.name}</h1>
                 
-                <p>Colour: ${item.selectedColour}</p>
+                <p>Colour: ${item.selectedColour}
+                <br>Price: $${item.product.price}</p>
             </div>
             <div class="cart-item-quantity">
                 <input type="number" class="item-quantity-input" name="${item.id}-quantity" value="${item.quantity}" readonly>
@@ -569,40 +577,6 @@ function generateCartItem(item) {
     return cartItem;
 }
 
-function addAddToCartEventListeners() {
-    /*
-    Add event listeners to all of the 'add to cart' buttons that are loaded
-    */
-
-    // find all of the 'add to cart' buttons
-    const btnsAddToCart = productContainer.querySelectorAll(".add-to-cart-button");
-    
-    // add event listeners to each
-    btnsAddToCart.forEach(btn => {
-        btn.addEventListener("click", async function (e) {
-
-            // update cartProducts
-            await fetchCartProducts();
-
-            // initialise values
-            const colourSelect = btn.parentNode.querySelector(".colour-select");
-            const colour = colourSelect.options[colourSelect.selectedIndex].text;
-            const productId = btn.value;
-            const productColourId = generateProductColourId(productId, colour);
-            const productInCart = findProductById(productColourId, cartProducts);
-            
-            if (productInCart) {
-                // if product is already in cart, patch quantity
-                productInCart.quantity++
-                await patchProductQuantityInCart(productInCart);
-            } else {
-                // if not in cart, post new product
-                await postProductToCart(productId, colour);
-            }
-            await populateCart();
-        });
-    })
-}
 
 async function postProductToCart(productId, colour) {
     /*
@@ -669,7 +643,7 @@ async function deleteItemFromCart(productId) {
 
 // *** CREATE FILTERS ***
 
-function createCheckBoxAndLabel(value, labelText, searchKey) {
+function createCheckBoxAndLabel(value, labelText, searchKey, hexCode="") {
     // labelText: string, value: string
     // return: a div element containing a checkbox with value=value, and a label for the checkbox with innerText=value
     if (typeof value === "string"){
@@ -716,15 +690,33 @@ function createCheckBoxAndLabel(value, labelText, searchKey) {
     
     // change label to titlecase if it's a brand or in all lowercase
     //label.innerHTML = labelText;
-    label.innerHTML = searchKey !== strings.productColours || searchKey === strings.brand || labelText === labelText.toLowerCase() ? labelText.toTitleCase() : labelText;
+    label.appendChild(checkbox);
+    let labelTextContent;
+    if (searchKey === strings.productColours) {
+        labelTextContent = document.createElement("div");
+        labelTextContent.classList.add("relative-container");
+        const tooltip = document.createElement("div");
+        tooltip.classList.add("bottom-tooltip");
+        tooltip.innerHTML = searchKey !== strings.productColours || searchKey === strings.brand || labelText === labelText.toLowerCase() ? labelText.toTitleCase() : labelText
+        labelTextContent.appendChild(tooltip);
+        checkbox.classList.add("checkbox-hidden");
+        const colourCircle = svgCircle(hexCode, 12);
+        colourCircle.classList.add("colour-circle");
+        label.appendChild(colourCircle);
+    } else {
+        labelTextContent = document.createElement("span");
+        labelTextContent.innerHTML = searchKey !== strings.productColours || searchKey === strings.brand || labelText === labelText.toLowerCase() ? labelText.toTitleCase() : labelText
+    }
+
+    
+    label.appendChild(labelTextContent)
     label.for = value;
-
     // create container and append checkbox + label
-    const container = document.createElement("div");
-    container.appendChild(checkbox);
-    container.appendChild(label);
+    // const container = document.createElement("div");
+    // //container.appendChild(checkbox);
+    // container.appendChild(label);
 
-    return container;
+    return label;
 
 }
 
@@ -759,7 +751,6 @@ function populateFilterContainer(filterContainer, filterValues, key) {
             case strings.productColours:
                 // if it's a colour, create a coloured circle and use the colour name
                 label = `
-                    ${svgCircle(filterValue.hexCode)}
                     ${filterValue.colourName.toTitleCase()}
                     `;
                 break;
@@ -768,7 +759,7 @@ function populateFilterContainer(filterContainer, filterValues, key) {
                 label = filterValue;
                 break;
         }
-        filterContainer.appendChild(createCheckBoxAndLabel(filterValue, label, key))
+        filterContainer.appendChild(createCheckBoxAndLabel(filterValue, label, key, filterValue.hexCode))
     })
     
 }

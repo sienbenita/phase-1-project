@@ -1,50 +1,409 @@
 {
   "cart_products": [
     {
-      "id": "cliniqueWearEverywhereNeutralsAllAboutShadowtrade8PanPaletteGreens",
+      "id": "rejuvamineralsMultiPurposePowderBlushEyePinkParfait",
       "product": {
-        "id": 815,
-        "brand": "clinique",
-        "name": "Wear Everywhere Neutrals All About Shadow&trade; 8-Pan Palette",
-        "price": "37.0",
+        "id": 1035,
+        "brand": "rejuva minerals",
+        "name": "Multi Purpose Powder - Blush & Eye",
+        "price": "5.5",
         "price_sign": "$",
         "currency": "USD",
-        "image_link": "https://www.clinique.com/media/export/cms/products/181x209/clq_ZCAE02_181x209.png",
-        "product_link": "https://www.clinique.com/product/1598/33862/makeup/eye-shadows/wear-everywhere-neutrals-all-about-shadow-8-pan-palette",
-        "website_link": "https://www.clinique.com",
-        "description": "Versatile eye shadow palettes are perfect for day… amped up for night when you layer multiple shades for extra depth and dimension. Long-wearing shades are crease- and fade-resistant. Ophthalmologist tested, too.",
+        "image_link": "https://www.purpicks.com/wp-content/uploads/2018/06/Rejuva-Minerals-Multi-Purpose-Powder-Blush-_-Eye-1.jpg",
+        "product_link": "https://www.purpicks.com/product/rejuva-minerals-multi-purpose-powder-blush-eye/",
+        "website_link": "https://purpicks.com/",
+        "description": "Our Multi Purpose Pressed Powders may be used for blush or eye shadow. Blended with antioxidants from Certified Organic Fruits, Berries &amp; Botanicals*. Made without any gluten containing ingredients. Mica free Pink Parfait and Papaya will offer a natural, ultra sheer semi-matte finish. The petals from beautiful crushed red roses that are found in Pink Parfait, are valued for their natural color and delightful aroma that they provide! Acai Berry will offer a natural, ultra sheer satin finish (mica added). VEGAN. Image one is Pink Parfait. Image two is Papaya, and image three is Acai Berry. Model in image four is wearing Papaya. Model in image five is wearing Acai Berry. To see a demonstration of Papaya, click on the video and fast forward to 3:44. Enjoy! This product is EWG VERIFIED&#x2122; and rated 'CLEAN'in the Think Dirty app! BPA and Phthalate free packaging. Plastic parts of compacts are recyclable. *Tiny flecks of fruit and botanical particles may be visible in powder. Pink Parfait and Papaya are Titanium Dioxide and Mica free. Net Weight: 2.8 gm.",
         "rating": null,
-        "category": "palette",
-        "product_type": "eyeshadow",
-        "tag_list": [],
-        "created_at": "2017-12-23T23:35:16.485Z",
-        "updated_at": "2017-12-26T00:33:00.434Z",
-        "product_api_url": "https://makeup-api.herokuapp.com/api/v1/products/815.json",
-        "api_featured_image": "//s3.amazonaws.com/donovanbailey/products/api_featured_images/000/000/815/original/data?1514072324",
+        "category": "powder",
+        "product_type": "blush",
+        "tag_list": [
+          "purpicks",
+          "EWG Verified",
+          "Hypoallergenic",
+          "No Talc"
+        ],
+        "created_at": "2018-06-30T19:19:31.909Z",
+        "updated_at": "2018-09-02T22:52:06.855Z",
+        "product_api_url": "https://makeup-api.herokuapp.com/api/v1/products/1035.json",
+        "api_featured_image": "//s3.amazonaws.com/donovanbailey/products/api_featured_images/000/001/035/original/open-uri20180630-4-n6wb0y?1530390383",
         "product_colors": [
           {
-            "hex_value": "#F7E2D1,#673E2C,#DBAA95,#CDB298",
-            "colour_name": "Nudes"
+            "hex_value": "#E1BFC0",
+            "colour_name": "Pink Parfait"
           },
           {
-            "hex_value": "#FDE7F2,#65415E,#C0B5BB,#E6BFD6",
-            "colour_name": "Pinks"
+            "hex_value": "#D7A7A3",
+            "colour_name": "Papaya"
           },
           {
-            "hex_value": "#D4DAD4,#92A799,#7D7253,#5B664F",
-            "colour_name": "Greens"
-          },
-          {
-            "hex_value": "#D9CED6,#C1C5CB,#8A788A,#4E4951",
-            "colour_name": "Greys"
-          },
-          {
-            "hex_value": "#DDDFE4,#4C5060,#4B4A6A,#94838C",
-            "colour_name": "Blues"
+            "hex_value": "#E6C3CB",
+            "colour_name": "Acai Berry"
           }
         ]
       },
-      "selectedColour": "Greens",
+      "selectedColour": "Pink Parfait",
+      "quantity": 7
+    },
+    {
+      "id": "rejuvamineralsMultiPurposePowderBlushEyeAcaiBerry",
+      "product": {
+        "id": 1035,
+        "brand": "rejuva minerals",
+        "name": "Multi Purpose Powder - Blush & Eye",
+        "price": "5.5",
+        "price_sign": "$",
+        "currency": "USD",
+        "image_link": "https://www.purpicks.com/wp-content/uploads/2018/06/Rejuva-Minerals-Multi-Purpose-Powder-Blush-_-Eye-1.jpg",
+        "product_link": "https://www.purpicks.com/product/rejuva-minerals-multi-purpose-powder-blush-eye/",
+        "website_link": "https://purpicks.com/",
+        "description": "Our Multi Purpose Pressed Powders may be used for blush or eye shadow. Blended with antioxidants from Certified Organic Fruits, Berries &amp; Botanicals*. Made without any gluten containing ingredients. Mica free Pink Parfait and Papaya will offer a natural, ultra sheer semi-matte finish. The petals from beautiful crushed red roses that are found in Pink Parfait, are valued for their natural color and delightful aroma that they provide! Acai Berry will offer a natural, ultra sheer satin finish (mica added). VEGAN. Image one is Pink Parfait. Image two is Papaya, and image three is Acai Berry. Model in image four is wearing Papaya. Model in image five is wearing Acai Berry. To see a demonstration of Papaya, click on the video and fast forward to 3:44. Enjoy! This product is EWG VERIFIED&#x2122; and rated 'CLEAN'in the Think Dirty app! BPA and Phthalate free packaging. Plastic parts of compacts are recyclable. *Tiny flecks of fruit and botanical particles may be visible in powder. Pink Parfait and Papaya are Titanium Dioxide and Mica free. Net Weight: 2.8 gm.",
+        "rating": null,
+        "category": "powder",
+        "product_type": "blush",
+        "tag_list": [
+          "purpicks",
+          "EWG Verified",
+          "Hypoallergenic",
+          "No Talc"
+        ],
+        "created_at": "2018-06-30T19:19:31.909Z",
+        "updated_at": "2018-09-02T22:52:06.855Z",
+        "product_api_url": "https://makeup-api.herokuapp.com/api/v1/products/1035.json",
+        "api_featured_image": "//s3.amazonaws.com/donovanbailey/products/api_featured_images/000/001/035/original/open-uri20180630-4-n6wb0y?1530390383",
+        "product_colors": [
+          {
+            "hex_value": "#E1BFC0",
+            "colour_name": "Pink Parfait"
+          },
+          {
+            "hex_value": "#D7A7A3",
+            "colour_name": "Papaya"
+          },
+          {
+            "hex_value": "#E6C3CB",
+            "colour_name": "Acai Berry"
+          }
+        ]
+      },
+      "selectedColour": "Acai Berry",
+      "quantity": 2
+    },
+    {
+      "id": "nyxRetractableLipLinerRuby",
+      "product": {
+        "id": 891,
+        "brand": "nyx",
+        "name": "Retractable Lip Liner",
+        "price": "5.0",
+        "price_sign": "$",
+        "currency": "USD",
+        "image_link": "https://www.nyxcosmetics.com/dw/image/v2/AANG_PRD/on/demandware.static/-/Sites-cpd-nyxusa-master-catalog/default/dw2524f26b/ProductImages/Lips/Retractable_Lip_Liner/retractablelipliner_main.jpg?sw=390&sh=390&sm=fit",
+        "product_link": "https://www.nyxcosmetics.com/retractable-lip-liner/NYX_051.html?cgid=lip-liner",
+        "website_link": "https://www.nyxcosmetics.com",
+        "description": "Love your lips! Create the perfect pout with our creamy, richly pigmented liner in an easy twist-up pencil. Renowned for its staying power! Available in 19 irresistible shades.",
+        "rating": null,
+        "category": null,
+        "product_type": "lip_liner",
+        "tag_list": [],
+        "created_at": "2017-12-24T02:27:28.905Z",
+        "updated_at": "2017-12-24T02:27:29.477Z",
+        "product_api_url": "https://makeup-api.herokuapp.com/api/v1/products/891.json",
+        "api_featured_image": "//s3.amazonaws.com/donovanbailey/products/api_featured_images/000/000/891/original/open-uri20171224-4-mgfb2y?1514082448",
+        "product_colors": [
+          {
+            "hex_value": "#E17F7C",
+            "colour_name": "Pinky Beige"
+          },
+          {
+            "hex_value": "#D86B7E",
+            "colour_name": "Soft Pink"
+          },
+          {
+            "hex_value": "#E67D84",
+            "colour_name": "Peony"
+          },
+          {
+            "hex_value": "#D45F65",
+            "colour_name": "Pretty In Pink"
+          },
+          {
+            "hex_value": "#C4686B",
+            "colour_name": "Nectar"
+          },
+          {
+            "hex_value": "#BE595F",
+            "colour_name": "Nude Pink"
+          },
+          {
+            "hex_value": "#AC4A4B",
+            "colour_name": "Jewel"
+          },
+          {
+            "hex_value": "#C1386C",
+            "colour_name": "Hot Pink"
+          },
+          {
+            "hex_value": "#77182E",
+            "colour_name": "Plum"
+          },
+          {
+            "hex_value": "#7E101D",
+            "colour_name": "Dark Red"
+          },
+          {
+            "hex_value": "#964436",
+            "colour_name": "Sienna"
+          },
+          {
+            "hex_value": "#A81F27",
+            "colour_name": "Red"
+          },
+          {
+            "hex_value": "#D11E21",
+            "colour_name": "Ruby"
+          },
+          {
+            "hex_value": "#A96D51",
+            "colour_name": "Vanilla Sky"
+          },
+          {
+            "hex_value": "#A16644",
+            "colour_name": "Natural"
+          },
+          {
+            "hex_value": "#A36348",
+            "colour_name": "Nude"
+          },
+          {
+            "hex_value": "#90583D",
+            "colour_name": "Sand Beige"
+          },
+          {
+            "hex_value": "#713E2B",
+            "colour_name": "Cocoa"
+          },
+          {
+            "hex_value": "gray14",
+            "colour_name": "Black Lips"
+          }
+        ]
+      },
+      "selectedColour": "Ruby",
+      "quantity": 1
+    },
+    {
+      "id": "nyxBrightIdeaIlluminatingStickRosePetalPop",
+      "product": {
+        "id": 921,
+        "brand": "nyx",
+        "name": "Bright Idea Illuminating Stick",
+        "price": "8.0",
+        "price_sign": "$",
+        "currency": "USD",
+        "image_link": "https://www.nyxcosmetics.com/dw/image/v2/AANG_PRD/on/demandware.static/-/Sites-cpd-nyxusa-master-catalog/default/dwc8112b7d/ProductImages/2016/Face/Bright_Idea_Illuminating_Stick/brightideailluminatingstick_main.jpg?sw=390&sh=390&sm=fit",
+        "product_link": "https://www.nyxcosmetics.com/bright-idea-illuminating-stick/NYX_347.html?cgid=bronzer",
+        "website_link": "https://www.nyxcosmetics.com",
+        "description": "Brighten things up with one of our new Bright Idea Illuminating Sticks! Available in a range of radiating hues--including four highlighters, four blushes and four bronzers--each creamy-soft shade goes on smoothly and sets right away for an instant, lit-from-within glow. Petite, portable and perfect for strobing, it’s the makeup must-have of the season.",
+        "rating": null,
+        "category": null,
+        "product_type": "bronzer",
+        "tag_list": [],
+        "created_at": "2017-12-24T02:28:42.079Z",
+        "updated_at": "2017-12-24T02:31:01.364Z",
+        "product_api_url": "https://makeup-api.herokuapp.com/api/v1/products/921.json",
+        "api_featured_image": "//s3.amazonaws.com/donovanbailey/products/api_featured_images/000/000/921/original/open-uri20171224-4-wm9lld?1514082660",
+        "product_colors": [
+          {
+            "hex_value": "#E6C2C6",
+            "colour_name": "Lavender Lust"
+          },
+          {
+            "hex_value": "#F4D0B8",
+            "colour_name": "Chardonnay Shimmer"
+          },
+          {
+            "hex_value": "#FBC4AF",
+            "colour_name": "Pearl Pink Lace"
+          },
+          {
+            "hex_value": "#F8BAA3",
+            "colour_name": "Pinkie Dust"
+          },
+          {
+            "hex_value": "#FD876D",
+            "colour_name": "Coralicious"
+          },
+          {
+            "hex_value": "#FD7373",
+            "colour_name": "Rose Petal Pop"
+          },
+          {
+            "hex_value": "#C03731",
+            "colour_name": "Brick Red Blaze"
+          },
+          {
+            "hex_value": "#EFB381",
+            "colour_name": "Sun Kissed Crush"
+          },
+          {
+            "hex_value": "#E9A47A",
+            "colour_name": "Bermuda Bronze"
+          },
+          {
+            "hex_value": "#DD9861",
+            "colour_name": "Maui Suntan"
+          },
+          {
+            "hex_value": "#CE8A5B",
+            "colour_name": "Sandy Glow"
+          },
+          {
+            "hex_value": "#C38451",
+            "colour_name": "Topaz Tan"
+          }
+        ]
+      },
+      "selectedColour": "Rose Petal Pop",
+      "quantity": 1
+    },
+    {
+      "id": "glossierGenerationGCake",
+      "product": {
+        "id": 999,
+        "brand": "glossier",
+        "name": "Generation G",
+        "price": "20.0",
+        "price_sign": "$",
+        "currency": "USD",
+        "image_link": "https://static-assets.glossier.com/production/spree/images/attachments/000/001/239/portrait_normal/GenG2.jpg?1487709747",
+        "product_link": "https://www.glossier.com/products/generation-g",
+        "website_link": "https://www.glossier.com",
+        "description": "Generation G is a new kind of lip color that gives the look and finish of just-blotted lipstick, without the blot. We’ve created a short list of the six most important shades, with dialed-down pigment loads for a casual look: Zip, Leo, Crush, and Jam, along with the super subtle Cake and Like, which give some oomph to lighter lip tones. They’re lipsticks that adapt to you, not the other way around, so they'll appear a bit different on everyone as your natural lip color shows through. The effect? Diffused, matte goodness—just swipe it on.",
+        "rating": null,
+        "category": null,
+        "product_type": "lipstick",
+        "tag_list": [],
+        "created_at": "2017-12-27T02:21:55.363Z",
+        "updated_at": "2017-12-27T02:55:18.719Z",
+        "product_api_url": "https://makeup-api.herokuapp.com/api/v1/products/999.json",
+        "api_featured_image": "//s3.amazonaws.com/donovanbailey/products/api_featured_images/000/000/999/original/open-uri20171227-4-2ul0s6?1514341420",
+        "product_colors": [
+          {
+            "hex_value": "#F4E1D7",
+            "colour_name": "Cake"
+          },
+          {
+            "hex_value": "#E5C2CF",
+            "colour_name": "Like"
+          },
+          {
+            "hex_value": "#CB6382",
+            "colour_name": "Crush"
+          },
+          {
+            "hex_value": "#974A72",
+            "colour_name": "Jam"
+          },
+          {
+            "hex_value": "#A46C58",
+            "colour_name": "Leo"
+          },
+          {
+            "hex_value": "#DE6262",
+            "colour_name": "Zip"
+          }
+        ]
+      },
+      "selectedColour": "Cake",
+      "quantity": 1
+    },
+    {
+      "id": "nudusAmalia27Kisses",
+      "product": {
+        "id": 1029,
+        "brand": "nudus",
+        "name": "Amalia",
+        "price": "0.0",
+        "price_sign": "$",
+        "currency": "USD",
+        "image_link": "https://www.purpicks.com/wp-content/uploads/2018/06/Nudus-Amalia.jpg",
+        "product_link": "https://www.purpicks.com/product/nudus-amalia/",
+        "website_link": "https://purpicks.com/",
+        "description": "named after my beautiful mum, delicately pink that displays sophistication. a perfect sheer wash of gorgeous colour that brings a new texture to the lip euphoria range. <strong>lipstick benefits</strong> a unique handcrafted lipstick blended with certified organic ingredients. beautifully pigmented with ancient ayurvedic bioactive colour extracts, leaving your lips soft and deliciously hydrated.<strong>key benefits</strong><ul><li>vitamins, A, B, C, D, E and K</li><li>antioxidants, including pomegranate, raspberry and kiwi cold pressed oils</li><li>27 active natural ingredients, helping against environmental stress</li><li>colours made from flowers, fruits, herbs and minerals</li><li>free from parabens, petro-chemicals, lanolin, hydrogenated oils,fd&amp;c and lake dyes, nano-particles, gmo, pesticides and fungicides</li><li>not tested on animals</li><li>gluten free</li></ul>",
+        "rating": null,
+        "category": "lipstick",
+        "product_type": "lipstick",
+        "tag_list": [
+          "purpicks"
+        ],
+        "created_at": "2018-06-30T19:19:31.441Z",
+        "updated_at": "2018-09-02T22:52:06.839Z",
+        "product_api_url": "https://makeup-api.herokuapp.com/api/v1/products/1029.json",
+        "api_featured_image": "//s3.amazonaws.com/donovanbailey/products/api_featured_images/000/001/029/original/open-uri20180630-4-1rfkucb?1530390379",
+        "product_colors": [
+          {
+            "hex_value": "#7C524F",
+            "colour_name": "27 Kisses"
+          },
+          {
+            "hex_value": "#884955",
+            "colour_name": "Amalia"
+          },
+          {
+            "hex_value": "#9F3D2A",
+            "colour_name": "Bitter Sweet"
+          },
+          {
+            "hex_value": "#542A26",
+            "colour_name": "Dirty Diana"
+          },
+          {
+            "hex_value": "#793D48",
+            "colour_name": "Dreamtime"
+          },
+          {
+            "hex_value": "#BB6E60",
+            "colour_name": "Fairy Tale"
+          },
+          {
+            "hex_value": "#BA8285",
+            "colour_name": "Halo"
+          },
+          {
+            "hex_value": "#71474E",
+            "colour_name": "Just Like Jade"
+          },
+          {
+            "hex_value": "#AF8475",
+            "colour_name": "Naked"
+          },
+          {
+            "hex_value": "#D65572",
+            "colour_name": "Precious"
+          },
+          {
+            "hex_value": "#8F1A23",
+            "colour_name": "Revenge"
+          },
+          {
+            "hex_value": "#8B383D",
+            "colour_name": "Ruby Rose"
+          },
+          {
+            "hex_value": "#C83752",
+            "colour_name": "Survivor"
+          },
+          {
+            "hex_value": "#784F5F",
+            "colour_name": "Viva"
+          },
+          {
+            "hex_value": "#672F57",
+            "colour_name": "Zo Zo"
+          }
+        ]
+      },
+      "selectedColour": "27 Kisses",
       "quantity": 1
     }
   ]
