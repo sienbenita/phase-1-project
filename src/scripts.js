@@ -216,8 +216,8 @@ function svgCircle(fillColour, radius) {
     */
     const circleContainer = document.createElement("span");
     circleContainer.innerHTML = `
-    <svg height="${radius*2}" width="${radius*2}">
-        <circle cx="${radius}" cy="${radius}" r="${radius}" fill="${fillColour}" />
+    <svg height="${radius*2+4}" width="${radius*2+4}">
+        <circle cx="${radius+2}" cy="${radius+2}" r="${radius}" fill="${fillColour}" />
     </svg>
 `
     return circleContainer;
@@ -267,7 +267,7 @@ const cartSubtotal = document.querySelector("#cart-subtotal");
 const checkoutButton = document.querySelector("#checkout-button");
 // product detail overlay
 const productDetailOverlay = document.querySelector("#product-detail-overlay");
-const productDetailOverlayAddToCart = document.querySelector
+const productDetailOverlayAddToCart = productDetailOverlay.querySelector(".add-to-cart-button")
 
 // *** INIT ***
 function initialisePage() {
@@ -366,6 +366,22 @@ function changeDisplayOfAllProductCards(display) {
     loadedProducts.forEach(e => {e.card.style.display = display});
 }
 
+function addClickOffEventListener(toggleElement, ...clickExceptions) {
+    document.addEventListener('click', e => {
+        let targetElement = e.target;
+        do {
+            if(clickExceptions.includes(targetElement)) {
+              // This is a click inside, does nothing, just return.
+              return;
+            }
+            // Go up the DOM
+            targetElement = targetElement.parentNode;
+          } while (targetElement);
+          // This is a click outside.      
+          toggleElement.style.display = strings.none;
+        });
+}
+
 // *** CREATE PRODUCT CARDS ***
 
 function populateProductContainer(products) {
@@ -383,13 +399,45 @@ function populateProductContainer(products) {
     products.forEach(product => {
         const id = generateProductId(product);
         const card = createProductCard(id, product.image_link, product.brand, product.name, product.price, product.product_colors);
+        
         productContainer.appendChild(card);
-        
-        //addProductImageErrorListenerToLast(placeholderProductValues.image_link);
-        
+        card.addEventListener("click", e => fillProductDetailOverlay(product, card));
+                
         addToLoadedProducts(id, card, product);
     })
     
+}
+
+function fillProductDetailOverlay(product, card) {
+    productDetailOverlay.style.display = strings.block;
+    productDetailOverlay.innerHTML = `
+            <div id="back-strip">Back</div>
+            <div id="product-details">
+                <div id="product-image"><img src="${product.image_link}"></div>
+                <div id="product-info">
+                    <h2 id="brand">${product.brand.toUpperCase()}</h2>
+                    <h1 id="name">${product.name}</h1>
+                    <div id="rating"><img src="./images/5stars.png"></div>
+                    <div id="price">${product.price}</div>
+                    <div id="selected-shade"></div>
+                    <div id="shades-container">
+                        <h3>Shade: <span id="shade-name">Hee</span></h3>
+                        <div id="shades"></div>
+                    </div>
+                    <div id="add-to-cart-container">
+                        <label for="quantity-input">QTY:</label>
+                        <input id="quantity-input" type="number" value="1" name="quantity-input">
+                        <button class="add-to-cart-button">ADD TO BAG</button>
+                    </div>
+                    <div id="description-container">
+                        <h1>Details</h1>
+                        <p id="description">${product.description}</p>
+                    </div>
+                </div>
+            </div>
+    `
+    addClickOffEventListener(productDetailOverlay, productDetailOverlay, card);
+
 }
 
 function createProductCard(id, image, brand, name, price, colours) {
@@ -492,20 +540,7 @@ function changeCartDisplay() {
         if (!display || display === strings.none) {
             cartDropdownContent.style.display = strings.block;
             populateCart();
-            document.addEventListener('click', e => {
-                let targetElement = e.target;
-                do {
-                    if(targetElement === cartDropdownContent || targetElement === cartButton) {
-                      // This is a click inside, does nothing, just return.
-                      return;
-                    }
-                    // Go up the DOM
-                    targetElement = targetElement.parentNode;
-                  } while (targetElement);
-                  // This is a click outside.      
-                  cartDropdownContent.style.display = strings.none;
-                });
-            
+            addClickOffEventListener(cartDropdownContent, cartDropdownContent, cartButton);
         } else {
             cartDropdownContent.style.display = strings.none;
             document.removeEventListener('click', e => {
@@ -515,6 +550,8 @@ function changeCartDisplay() {
             })
         }
 }
+
+
 
 async function fetchCartProducts() {
     /*

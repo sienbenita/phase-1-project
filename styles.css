@@ -351,6 +351,11 @@ button {
         flex-wrap: wrap;
     }
 
+    .checkbox-hidden:checked ~ .colour-circle {
+        stroke: var(--pink);
+        stroke-width: 2px;
+    }
+
     .colour-circle {
         position: relative;
         display: inline-block;
